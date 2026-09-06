@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lorenc Zhuka — AI Engineer</title>
   <meta name="description" content="Lorenc Zhuka — AI Engineer building RAG pipelines, autonomous agents, and AI automations for real businesses." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Philosopher:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -29,9 +32,9 @@
     <!-- Hero -->
     <section class="hero container">
       <div class="hero__content reveal">
-        <p class="hero__eyebrow">Hi, I'm</p>
+        <p class="hero__eyebrow">AI Engineer &amp; Founder</p>
         <h1 class="hero__name">Lorenc Zhuka</h1>
-        <h2 class="hero__role">AI Engineer &amp; Founder</h2>
+        <div class="hero__divider" aria-hidden="true"></div>
         <p class="hero__tagline">
           Building production-ready LLM applications — RAG pipelines, autonomous agents,
           and AI automations that turn unstructured data into real business value.
@@ -48,73 +51,110 @@
 
     <!-- About -->
     <section id="about" class="section container">
-      <h3 class="section__label">01 · About</h3>
+      <div class="section__head">
+        <span class="section__label">01 · About</span>
+        <span class="section__rule" aria-hidden="true"></span>
+      </div>
       <h2 class="section__title">About Me</h2>
 
       <div class="about">
-        <p class="about__summary reveal">
-          AI Engineer and founder with 4+ years of experience building production LLM applications —
-          semantic search engines, RAG-based private chatbots, and autonomous agents. Hands-on across
-          the full stack: retrieval pipelines, LLM serving, evaluation, and deployment. Skilled at
-          turning unstructured data into accurate, instantly searchable knowledge that integrates into
-          real business workflows.
-        </p>
+        <div class="about__col">
+          <p class="about__summary reveal">
+            AI Engineer and founder with 4+ years of experience building production LLM applications —
+            semantic search engines, RAG-based private chatbots, and autonomous agents. Hands-on across
+            the full stack: retrieval pipelines, LLM serving, evaluation, and deployment. Skilled at
+            turning unstructured data into accurate, instantly searchable knowledge that integrates into
+            real business workflows.
+          </p>
+        </div>
 
-        <div class="stack reveal">
-          <h4 class="stack__title">Stack &amp; Tools</h4>
-          <div class="stack__grid">
+        <div class="about__col">
+          <div class="stats reveal">
+            <div class="stats__item">
+              <p class="stats__number">4+</p>
+              <p class="stats__label">Years experience</p>
+            </div>
+            <div class="stats__item">
+              <p class="stats__number">8</p>
+              <p class="stats__label">Projects shipped</p>
+            </div>
+            <div class="stats__item">
+              <p class="stats__number">4</p>
+              <p class="stats__label">Roles held</p>
+            </div>
+            <div class="stats__item">
+              <p class="stats__number">1</p>
+              <p class="stats__label">Company founded</p>
+            </div>
+          </div>
+
+          <div class="stack reveal">
+            <h4 class="stack__title">Stack &amp; Tools</h4>
             <div class="stack__group">
               <h5>GenAI / LLM</h5>
-              <p>RAG pipelines, LangChain, Hugging Face Transformers, agents (ReAct, tool use, function calling, multi-agent systems), prompt engineering, LLM evaluation</p>
+              <div class="tags">
+                <span class="tag">RAG pipelines</span><span class="tag">LangChain</span><span class="tag">Hugging Face Transformers</span><span class="tag">Agents (ReAct, tool use, function calling, multi-agent)</span><span class="tag">Prompt engineering</span><span class="tag">LLM evaluation</span>
+              </div>
             </div>
             <div class="stack__group">
               <h5>LLM Serving &amp; Infra</h5>
-              <p>vLLM, TGI, llama.cpp, Docker, FastAPI, CI/CD, containerized deployments, monitoring &amp; logging</p>
+              <div class="tags">
+                <span class="tag">vLLM</span><span class="tag">TGI</span><span class="tag">llama.cpp</span><span class="tag">Docker</span><span class="tag">FastAPI</span><span class="tag">CI/CD</span><span class="tag">Containerized deployments</span><span class="tag">Monitoring &amp; logging</span>
+              </div>
             </div>
             <div class="stack__group">
               <h5>ML / DL / NLP</h5>
-              <p>PyTorch, TensorFlow, scikit-learn, spaCy</p>
+              <div class="tags">
+                <span class="tag">PyTorch</span><span class="tag">TensorFlow</span><span class="tag">scikit-learn</span><span class="tag">spaCy</span>
+              </div>
             </div>
             <div class="stack__group">
               <h5>Data &amp; Retrieval</h5>
-              <p>Vector databases (Milvus, pgvector), embeddings, semantic search, OCR (Tesseract)</p>
+              <div class="tags">
+                <span class="tag">Vector databases (Milvus, pgvector)</span><span class="tag">Embeddings</span><span class="tag">Semantic search</span><span class="tag">OCR (Tesseract)</span>
+              </div>
             </div>
             <div class="stack__group">
               <h5>Languages &amp; Tools</h5>
-              <p>Python, SQL, JavaScript/React, Git, AWS</p>
+              <div class="tags">
+                <span class="tag">Python</span><span class="tag">SQL</span><span class="tag">JavaScript/React</span><span class="tag">Git</span><span class="tag">AWS</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="education reveal">
-          <h4>Education</h4>
-          <div class="education__item">
-            <p class="education__degree">M.Sc. Data Science</p>
-            <p class="education__school">Darmstadt University of Applied Sciences</p>
-            <p class="education__dates">Oct 2021 – Nov 2023</p>
-            <p class="education__thesis">Thesis (at Merck KGaA): Few-shot chain-of-thought prompting techniques with LLMs</p>
+          <div class="education reveal">
+            <h4>Education</h4>
+            <div class="education__item">
+              <p class="education__degree">M.Sc. Data Science</p>
+              <p class="education__school">Darmstadt University of Applied Sciences</p>
+              <p class="education__dates">Oct 2021 – Nov 2023</p>
+              <p class="education__thesis">Thesis (at Merck KGaA): Few-shot chain-of-thought prompting techniques with LLMs</p>
+            </div>
+            <div class="education__item">
+              <p class="education__degree">B.Sc. Computer Science</p>
+              <p class="education__school">Faculty of Natural Sciences, University of Tirana</p>
+              <p class="education__dates">Oct 2017 – Jul 2020</p>
+            </div>
           </div>
-          <div class="education__item">
-            <p class="education__degree">B.Sc. Computer Science</p>
-            <p class="education__school">Faculty of Natural Sciences, University of Tirana</p>
-            <p class="education__dates">Oct 2017 – Jul 2020</p>
-          </div>
-        </div>
 
-        <div class="languages reveal">
-          <h4>Languages</h4>
-          <ul class="languages__list">
-            <li><span>English</span><span class="tag">Fluent</span></li>
-            <li><span>German</span><span class="tag">Fluent</span></li>
-            <li><span>Albanian</span><span class="tag">Native</span></li>
-          </ul>
+          <div class="languages reveal">
+            <h4>Languages</h4>
+            <ul class="languages__list">
+              <li class="tag">English<span class="languages__level">Fluent</span></li>
+              <li class="tag">German<span class="languages__level">Fluent</span></li>
+              <li class="tag">Albanian<span class="languages__level">Native</span></li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Experience -->
     <section id="experience" class="section container">
-      <h3 class="section__label">02 · Experience</h3>
+      <div class="section__head">
+        <span class="section__label">02 · Experience</span>
+        <span class="section__rule" aria-hidden="true"></span>
+      </div>
       <h2 class="section__title">Experience</h2>
 
       <div class="timeline">
@@ -172,105 +212,127 @@
 
     <!-- Projects -->
     <section id="projects" class="section container">
-      <h3 class="section__label">03 · Projects</h3>
+      <div class="section__head">
+        <span class="section__label">03 · Projects</span>
+        <span class="section__rule" aria-hidden="true"></span>
+      </div>
       <h2 class="section__title">Selected Work</h2>
       <p class="section__intro reveal">
         A selection of AI/ML projects spanning autonomous agents, NLP, and applied machine
         learning, each with full source on GitHub.
       </p>
 
-      <div class="projects__grid">
+      <div class="projects__list">
         <article class="project-card reveal">
           <span class="project-card__number">01</span>
-          <h4 class="project-card__title">Autonomous AI Research Agent with BabyAGI</h4>
-          <p class="project-card__desc">AI-powered task management system that generates, prioritizes, and executes tasks using an LLM and vector databases, extending BabyAGI with an answer-generation model that retrieves research papers from arXiv, ChemRxiv, and PubMed via semantic search.</p>
-          <div class="project-card__tags">
-            <span class="tag">GPT-3.5-turbo</span><span class="tag">Vector DB</span><span class="tag">LLM Agents</span>
+          <div>
+            <h4 class="project-card__title">Autonomous AI Research Agent with BabyAGI</h4>
+            <p class="project-card__desc">AI-powered task management system that generates, prioritizes, and executes tasks using an LLM and vector databases, extending BabyAGI with an answer-generation model that retrieves research papers from arXiv, ChemRxiv, and PubMed via semantic search.</p>
+            <div class="project-card__tags">
+              <span>GPT-3.5-turbo</span><span>Vector DB</span><span>LLM Agents</span>
+            </div>
+            <a href="https://github.com/Lori10/LLM-Agent-ReAct-BabyAGI" class="project-card__link" target="_blank" rel="noopener">View on GitHub</a>
           </div>
-          <a href="https://github.com/Lori10/LLM-Agent-ReAct-BabyAGI" class="project-card__link" target="_blank" rel="noopener">View on GitHub →</a>
         </article>
 
         <article class="project-card reveal">
           <span class="project-card__number">02</span>
-          <h4 class="project-card__title">Autonomous AI Research Agent with ReAct</h4>
-          <p class="project-card__desc">Custom AI agent using ReAct logic to combine reasoning and action, generating factual, reference-backed answers from research publications via multi-step self-questioning and query decomposition.</p>
-          <div class="project-card__tags">
-            <span class="tag">ReAct</span><span class="tag">GPT-3.5-turbo</span><span class="tag">Semantic Search</span>
+          <div>
+            <h4 class="project-card__title">Autonomous AI Research Agent with ReAct</h4>
+            <p class="project-card__desc">Custom AI agent using ReAct logic to combine reasoning and action, generating factual, reference-backed answers from research publications via multi-step self-questioning and query decomposition.</p>
+            <div class="project-card__tags">
+              <span>ReAct</span><span>GPT-3.5-turbo</span><span>Semantic Search</span>
+            </div>
+            <a href="https://github.com/Lori10/LLM-Agent-ReAct-BabyAGI" class="project-card__link" target="_blank" rel="noopener">View on GitHub</a>
           </div>
-          <a href="https://github.com/Lori10/LLM-Agent-ReAct-BabyAGI" class="project-card__link" target="_blank" rel="noopener">View on GitHub →</a>
         </article>
 
         <article class="project-card reveal">
           <span class="project-card__number">03</span>
-          <h4 class="project-card__title">Text Classification with SETFIT</h4>
-          <p class="project-card__desc">Few-shot text classification using SETFIT, fine-tuning a pre-trained Sentence Transformer in a contrastive Siamese manner, with a novel sampling method and public code/data release.</p>
-          <div class="project-card__tags">
-            <span class="tag">SETFIT</span><span class="tag">Sentence Transformers</span><span class="tag">Few-Shot</span>
+          <div>
+            <h4 class="project-card__title">Text Classification with SETFIT</h4>
+            <p class="project-card__desc">Few-shot text classification using SETFIT, fine-tuning a pre-trained Sentence Transformer in a contrastive Siamese manner, with a novel sampling method and public code/data release.</p>
+            <div class="project-card__tags">
+              <span>SETFIT</span><span>Sentence Transformers</span><span>Few-Shot</span>
+            </div>
+            <a href="https://github.com/Lori10/Text-Classification-SETFIT" class="project-card__link" target="_blank" rel="noopener">View on GitHub</a>
           </div>
-          <a href="https://github.com/Lori10/Text-Classification-SETFIT" class="project-card__link" target="_blank" rel="noopener">View on GitHub →</a>
         </article>
 
         <article class="project-card reveal">
           <span class="project-card__number">04</span>
-          <h4 class="project-card__title">Loan Approval Prediction</h4>
-          <p class="project-card__desc">Predicts loan application approval on 100,000+ imbalanced records, using scikit-learn pipelines to prevent data leakage during upsampling/downsampling with cross-validation, deployed as a Flask web app.</p>
-          <div class="project-card__tags">
-            <span class="tag">Scikit-learn</span><span class="tag">Flask</span><span class="tag">Python</span>
+          <div>
+            <h4 class="project-card__title">Loan Approval Prediction</h4>
+            <p class="project-card__desc">Predicts loan application approval on 100,000+ imbalanced records, using scikit-learn pipelines to prevent data leakage during upsampling/downsampling with cross-validation, deployed as a Flask web app.</p>
+            <div class="project-card__tags">
+              <span>Scikit-learn</span><span>Flask</span><span>Python</span>
+            </div>
+            <a href="https://github.com/Lori10/Loan-Approval-Prediction" class="project-card__link" target="_blank" rel="noopener">View on GitHub</a>
           </div>
-          <a href="https://github.com/Lori10/Loan-Approval-Prediction" class="project-card__link" target="_blank" rel="noopener">View on GitHub →</a>
         </article>
 
         <article class="project-card reveal">
           <span class="project-card__number">05</span>
-          <h4 class="project-card__title">Real Estate Price Prediction</h4>
-          <p class="project-card__desc">Bengaluru house price prediction on 13,000+ records, addressing dirty data through extensive preprocessing, feature engineering, and outlier treatment, with a Flask web application front end.</p>
-          <div class="project-card__tags">
-            <span class="tag">Scikit-learn</span><span class="tag">Flask</span><span class="tag">Regression</span>
+          <div>
+            <h4 class="project-card__title">Real Estate Price Prediction</h4>
+            <p class="project-card__desc">Bengaluru house price prediction on 13,000+ records, addressing dirty data through extensive preprocessing, feature engineering, and outlier treatment, with a Flask web application front end.</p>
+            <div class="project-card__tags">
+              <span>Scikit-learn</span><span>Flask</span><span>Regression</span>
+            </div>
+            <a href="https://github.com/Lori10/Bengaluru-House-Price-Prediction" class="project-card__link" target="_blank" rel="noopener">View on GitHub</a>
           </div>
-          <a href="https://github.com/Lori10/Bengaluru-House-Price-Prediction" class="project-card__link" target="_blank" rel="noopener">View on GitHub →</a>
         </article>
 
         <article class="project-card reveal">
           <span class="project-card__number">06</span>
-          <h4 class="project-card__title">Traffic Sign Recognition with CNN</h4>
-          <p class="project-card__desc">Automatic recognition of 43 traffic sign types with deep neural networks, using hyperparameter tuning via KerasTuner RandomSearch, early stopping, data augmentation, and VGG16 transfer learning.</p>
-          <div class="project-card__tags">
-            <span class="tag">CNN</span><span class="tag">Keras</span><span class="tag">Transfer Learning</span>
+          <div>
+            <h4 class="project-card__title">Traffic Sign Recognition with CNN</h4>
+            <p class="project-card__desc">Automatic recognition of 43 traffic sign types with deep neural networks, using hyperparameter tuning via KerasTuner RandomSearch, early stopping, data augmentation, and VGG16 transfer learning.</p>
+            <div class="project-card__tags">
+              <span>CNN</span><span>Keras</span><span>Transfer Learning</span>
+            </div>
+            <a href="https://github.com/Lori10/Traffic-Signs-Classification-with-CNN" class="project-card__link" target="_blank" rel="noopener">View on GitHub</a>
           </div>
-          <a href="https://github.com/Lori10/Traffic-Signs-Classification-with-CNN" class="project-card__link" target="_blank" rel="noopener">View on GitHub →</a>
         </article>
 
         <article class="project-card reveal">
           <span class="project-card__number">07</span>
-          <h4 class="project-card__title">Grammar Checker and Corrector</h4>
-          <p class="project-card__desc">NLP system combining a bigram language model for error detection with a fine-tuned T5 Transformer for classification and correction, using k-smoothing and threshold optimization.</p>
-          <div class="project-card__tags">
-            <span class="tag">T5</span><span class="tag">N-gram LM</span><span class="tag">Flask</span>
+          <div>
+            <h4 class="project-card__title">Grammar Checker and Corrector</h4>
+            <p class="project-card__desc">NLP system combining a bigram language model for error detection with a fine-tuned T5 Transformer for classification and correction, using k-smoothing and threshold optimization.</p>
+            <div class="project-card__tags">
+              <span>T5</span><span>N-gram LM</span><span>Flask</span>
+            </div>
+            <a href="https://github.com/Lori10/Grammer-Checker-Corrector-with-NgramLM-and-T5" class="project-card__link" target="_blank" rel="noopener">View on GitHub</a>
           </div>
-          <a href="https://github.com/Lori10/Grammer-Checker-Corrector-with-NgramLM-and-T5" class="project-card__link" target="_blank" rel="noopener">View on GitHub →</a>
         </article>
 
         <article class="project-card reveal">
           <span class="project-card__number">08</span>
-          <h4 class="project-card__title">Question Answering System with BERT</h4>
-          <p class="project-card__desc">NLP-based Q&amp;A system that generates answers from knowledge bases or text paragraphs by fine-tuning the BERT Transformer to process context and questions.</p>
-          <div class="project-card__tags">
-            <span class="tag">BERT</span><span class="tag">Transformers</span><span class="tag">Python</span>
+          <div>
+            <h4 class="project-card__title">Question Answering System with BERT</h4>
+            <p class="project-card__desc">NLP-based Q&amp;A system that generates answers from knowledge bases or text paragraphs by fine-tuning the BERT Transformer to process context and questions.</p>
+            <div class="project-card__tags">
+              <span>BERT</span><span>Transformers</span><span>Python</span>
+            </div>
+            <a href="https://github.com/Lori10/Question-Answering-System-with-BERT" class="project-card__link" target="_blank" rel="noopener">View on GitHub</a>
           </div>
-          <a href="https://github.com/Lori10/Question-Answering-System-with-BERT" class="project-card__link" target="_blank" rel="noopener">View on GitHub →</a>
         </article>
       </div>
     </section>
 
     <!-- Contact -->
     <section id="contact" class="section container">
-      <h3 class="section__label">04 · Contact</h3>
+      <div class="section__head">
+        <span class="section__label">04 · Contact</span>
+        <span class="section__rule" aria-hidden="true"></span>
+      </div>
       <h2 class="section__title">Let's Work Together</h2>
       <p class="section__intro reveal">
         Open to new opportunities, freelance projects, and interesting collaborations in AI and LLM engineering.
       </p>
 
-      <div class="contact__grid reveal">
+      <div class="contact__list reveal">
         <a href="mailto:lorenczhuka15@gmail.com" class="contact__card">
           <span class="contact__label">Email</span>
           <span class="contact__value">lorenczhuka15@gmail.com</span>
@@ -289,7 +351,8 @@
 
   <footer class="site-footer">
     <div class="container">
-      <p>&copy; <span id="year"></span> Lorenc Zhuka. All rights reserved.</p>
+      <p>Lorenc Zhuka · <span id="year"></span></p>
+      <p>AI Engineer &amp; Founder</p>
     </div>
   </footer>
 
