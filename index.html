@@ -72,7 +72,7 @@
             <p class="stats__label">Years experience</p>
           </div>
           <div class="stats__item">
-            <p class="stats__number">8</p>
+            <p class="stats__number">9</p>
             <p class="stats__label">Projects shipped</p>
           </div>
           <div class="stats__item">
@@ -216,13 +216,25 @@
       </div>
       <h2 class="section__title">Selected Work</h2>
       <p class="section__intro reveal">
-        A selection of AI/ML projects spanning autonomous agents, NLP, and applied machine
-        learning, each with full source on GitHub.
+        A selection of AI/ML projects spanning production RAG infrastructure, autonomous agents,
+        NLP, and applied machine learning.
       </p>
 
       <div class="projects__list">
         <article class="project-card reveal">
           <span class="project-card__number">01</span>
+          <div>
+            <h4 class="project-card__title">BIT-RAG — Production RAG Framework</h4>
+            <p class="project-card__desc">Architected and maintain a production-grade Python RAG framework powering document Q&amp;A across multiple enterprise products (inno:docs, Charlieverse, Speedikon, Deutsche Bahn). Built the core RAGChatbot orchestration, modular semantic/contextual chunking, hybrid dense+sparse retrieval with LLM reranking, and Azure OpenAI/local-LLM integrations. Own ingestion, deletion, and persistence pipelines across Milvus, OpenSearch, and SQL, plus CI/CD and Docker deployments serving millions of chunks in production.</p>
+            <div class="project-card__tags">
+              <span>RAG</span><span>Milvus</span><span>OpenSearch</span><span>Azure OpenAI</span><span>FastAPI</span><span>Docker</span><span>CI/CD</span>
+            </div>
+            <span class="project-card__link project-card__link--static">Private — Enterprise Framework</span>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <span class="project-card__number">02</span>
           <div>
             <h4 class="project-card__title">Autonomous AI Research Agent with BabyAGI</h4>
             <p class="project-card__desc">AI-powered task management system that generates, prioritizes, and executes tasks using an LLM and vector databases, extending BabyAGI with an answer-generation model that retrieves research papers from arXiv, ChemRxiv, and PubMed via semantic search.</p>
@@ -234,7 +246,7 @@
         </article>
 
         <article class="project-card reveal">
-          <span class="project-card__number">02</span>
+          <span class="project-card__number">03</span>
           <div>
             <h4 class="project-card__title">Autonomous AI Research Agent with ReAct</h4>
             <p class="project-card__desc">Custom AI agent using ReAct logic to combine reasoning and action, generating factual, reference-backed answers from research publications via multi-step self-questioning and query decomposition.</p>
@@ -246,7 +258,7 @@
         </article>
 
         <article class="project-card reveal">
-          <span class="project-card__number">03</span>
+          <span class="project-card__number">04</span>
           <div>
             <h4 class="project-card__title">Text Classification with SETFIT</h4>
             <p class="project-card__desc">Few-shot text classification using SETFIT, fine-tuning a pre-trained Sentence Transformer in a contrastive Siamese manner, with a novel sampling method and public code/data release.</p>
@@ -258,7 +270,7 @@
         </article>
 
         <article class="project-card reveal">
-          <span class="project-card__number">04</span>
+          <span class="project-card__number">05</span>
           <div>
             <h4 class="project-card__title">Loan Approval Prediction</h4>
             <p class="project-card__desc">Predicts loan application approval on 100,000+ imbalanced records, using scikit-learn pipelines to prevent data leakage during upsampling/downsampling with cross-validation, deployed as a Flask web app.</p>
@@ -270,7 +282,7 @@
         </article>
 
         <article class="project-card reveal">
-          <span class="project-card__number">05</span>
+          <span class="project-card__number">06</span>
           <div>
             <h4 class="project-card__title">Real Estate Price Prediction</h4>
             <p class="project-card__desc">Bengaluru house price prediction on 13,000+ records, addressing dirty data through extensive preprocessing, feature engineering, and outlier treatment, with a Flask web application front end.</p>
@@ -282,7 +294,7 @@
         </article>
 
         <article class="project-card reveal">
-          <span class="project-card__number">06</span>
+          <span class="project-card__number">07</span>
           <div>
             <h4 class="project-card__title">Traffic Sign Recognition with CNN</h4>
             <p class="project-card__desc">Automatic recognition of 43 traffic sign types with deep neural networks, using hyperparameter tuning via KerasTuner RandomSearch, early stopping, data augmentation, and VGG16 transfer learning.</p>
@@ -294,7 +306,7 @@
         </article>
 
         <article class="project-card reveal">
-          <span class="project-card__number">07</span>
+          <span class="project-card__number">08</span>
           <div>
             <h4 class="project-card__title">Grammar Checker and Corrector</h4>
             <p class="project-card__desc">NLP system combining a bigram language model for error detection with a fine-tuned T5 Transformer for classification and correction, using k-smoothing and threshold optimization.</p>
@@ -306,7 +318,7 @@
         </article>
 
         <article class="project-card reveal">
-          <span class="project-card__number">08</span>
+          <span class="project-card__number">09</span>
           <div>
             <h4 class="project-card__title">Question Answering System with BERT</h4>
             <p class="project-card__desc">NLP-based Q&amp;A system that generates answers from knowledge bases or text paragraphs by fine-tuning the BERT Transformer to process context and questions.</p>

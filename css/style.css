@@ -481,6 +481,13 @@ img { max-width: 100%; display: block; }
 }
 .project-card__link:hover { opacity: 0.65; }
 
+.project-card__link--static {
+  color: var(--color-text-muted);
+  border-bottom-color: var(--color-border);
+  cursor: default;
+}
+.project-card__link--static:hover { opacity: 1; }
+
 /* ============ Contact ============ */
 .contact__list { display: flex; flex-direction: column; }
 
