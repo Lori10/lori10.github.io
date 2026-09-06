@@ -248,23 +248,19 @@ img { max-width: 100%; display: block; }
 }
 
 /* ============ About ============ */
-.about {
-  display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  gap: clamp(2rem, 5vw, 4rem);
-}
-
 .about__summary {
   font-size: 1.05rem;
   line-height: 1.8;
   color: var(--color-text-body);
+  max-width: 70ch;
+  margin-bottom: 3rem;
 }
 
 .stats {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.1rem;
-  margin-bottom: 2.5rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.1rem 2rem;
+  margin-bottom: 3rem;
 }
 
 .stats__item {
@@ -291,7 +287,7 @@ img { max-width: 100%; display: block; }
 .stack,
 .education,
 .languages {
-  margin-bottom: 2.5rem;
+  margin-bottom: 3rem;
 }
 .stack:last-child,
 .education:last-child,
@@ -305,11 +301,14 @@ img { max-width: 100%; display: block; }
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--color-text-muted);
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
-.stack__group { margin-bottom: 1.25rem; }
-.stack__group:last-child { margin-bottom: 0; }
+.stack__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem 2.5rem;
+}
 
 .stack__group h5 {
   font-size: 0.8rem;
@@ -544,7 +543,7 @@ img { max-width: 100%; display: block; }
 
 /* ============ Responsive ============ */
 @media (max-width: 860px) {
-  .about { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: 1fr 1fr; }
   .timeline__item { grid-template-columns: 1fr; gap: 0.5rem; }
   .contact__card { grid-template-columns: 1fr; gap: 0.35rem; }
   .hero { flex-direction: column-reverse; text-align: center; padding-top: 2rem; }
@@ -587,6 +586,4 @@ img { max-width: 100%; display: block; }
     height: 160px;
     font-size: 2.4rem;
   }
-
-  .stats { grid-template-columns: 1fr; }
 }
