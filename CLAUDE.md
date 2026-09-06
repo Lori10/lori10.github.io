@@ -28,6 +28,19 @@ assets/         # images (profile photo, etc.)
 - Keep everything in this one page/style/script trio unless the site grows
   enough to justify splitting into multiple pages.
 
+## Deployment
+
+Live at **https://lori10.github.io/MyWebsite/** via GitHub Pages (repo:
+`github.com/Lori10/MyWebsite`, public).
+
+- Pages serves directly from the `main` branch, root path — no build step,
+  no CI config needed.
+- **To publish changes: just `git push` to `main`.** Pages rebuilds
+  automatically within a minute or two.
+- Free, no usage limits relevant to a portfolio site.
+- Custom domain (optional, still free hosting): add a `CNAME` file at the
+  repo root with the domain and point its DNS at GitHub Pages.
+
 ## Known placeholders to fill in
 
 - `assets/profile.jpg` — no real photo yet; hero/about currently show a CSS
