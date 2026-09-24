@@ -31,8 +31,8 @@ assets/         # images (profile photo, etc.)
 
 ## Deployment
 
-Live at **https://lori10.github.io/MyWebsite/** via GitHub Pages (repo:
-`github.com/Lori10/MyWebsite`, public).
+Live at **https://lori10.github.io/** via GitHub Pages (repo:
+`github.com/Lori10/lori10.github.io`, public).
 
 - Pages serves directly from the `main` branch, root path — no build step,
   no CI config needed.
