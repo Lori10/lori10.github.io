@@ -394,6 +394,7 @@ img { max-width: 100%; display: block; }
 .timeline__company {
   color: var(--color-text-muted);
   font-size: 0.9rem;
+  font-weight: 700;
   margin-top: 0.15rem;
   margin-bottom: 1rem;
 }
@@ -529,6 +530,13 @@ img { max-width: 100%; display: block; }
 }
 
 .case__section { margin-bottom: 3.5rem; }
+
+.case__section .section__label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--color-text);
+}
 
 .case__body {
   display: flex;
