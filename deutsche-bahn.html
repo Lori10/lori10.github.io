@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deutsche Bahn Case Study — Lorenc Zhuka</title>
+  <meta name="description" content="AI-supported objection and stakeholder management for Deutsche Bahn — enterprise RAG, advanced PDF processing, and a human-in-the-loop response workflow." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Philosopher:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="index.html" class="nav__logo">Lorenc Zhuka</a>
+      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav__links" id="navLinks">
+        <li><a href="index.html#about" class="nav__link">About</a></li>
+        <li><a href="index.html#experience" class="nav__link">Experience</a></li>
+        <li><a href="index.html#projects" class="nav__link">Projects</a></li>
+        <li><a href="index.html#contact" class="nav__link">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <article class="case container">
+      <a href="index.html#experience" class="case__back">&larr; Back to Experience</a>
+
+      <header class="case__header reveal">
+        <p class="hero__eyebrow">Case Study · Innomatik AG · DB mindbox</p>
+        <h1 class="case__title">AI-Supported Objection and Stakeholder Management for Deutsche Bahn</h1>
+        <p class="case__lead">
+          As part of the DB mindbox program, Innomatik AG developed an AI-supported solution to streamline
+          the handling of objections, inquiries, and stakeholder requests associated with large-scale
+          infrastructure and construction projects at Deutsche Bahn. The goal was to reduce the manual
+          effort involved in researching, coordinating, and preparing responses while maintaining reliable
+          and transparent communication.
+        </p>
+        <div class="project-card__tags">
+          <span>Enterprise RAG</span><span>BIT-RAG</span><span>OCR</span><span>Layout Detection</span><span>Hybrid Retrieval</span><span>LLM Reranking</span><span>Milvus</span><span>OpenSearch</span><span>Human-in-the-Loop</span>
+        </div>
+      </header>
+
+      <section class="case__section reveal">
+        <div class="section__head">
+          <span class="section__label">01 · The Problem</span>
+          <span class="section__rule" aria-hidden="true"></span>
+        </div>
+        <div class="case__body">
+          <p>
+            Large infrastructure projects generate a high volume of inquiries, objections, and concerns from
+            different stakeholders, including authorities, associations, interest groups, private individuals,
+            and the media. Project teams need to research relevant information across extensive project
+            documentation, coordinate input from multiple departments, and ensure that responses are complete,
+            accurate, and based on reliable project information.
+          </p>
+          <p>
+            Manual research and coordination are time-consuming and error-prone. At the same time, teams need
+            a clear overview of which inquiries are still open, which documents require verification, and where
+            feedback from other departments is still missing.
+          </p>
+        </div>
+      </section>
+
+      <section class="case__section reveal">
+        <div class="section__head">
+          <span class="section__label">02 · The Solution</span>
+          <span class="section__rule" aria-hidden="true"></span>
+        </div>
+        <div class="case__body">
+          <p>Innomatik developed an AI-supported application that assists project teams throughout the response process:</p>
+          <ul class="timeline__list">
+            <li><strong>Automated document and inquiry analysis:</strong> Incoming inquiries are analyzed against relevant project documentation to identify the information required to answer stakeholder requests.</li>
+            <li><strong>AI-generated response suggestions:</strong> The system generates context-aware draft responses based on the available project information.</li>
+            <li><strong>Human-in-the-loop:</strong> Project managers review, edit, and refine the AI-generated responses. Final decisions and responsibility remain with the human experts.</li>
+            <li><strong>Central dashboard:</strong> A dedicated interface provides an overview of open inquiries, documents requiring verification, and pending feedback from different departments.</li>
+          </ul>
+          <p>
+            The solution made use of <strong>BIT-RAG, a privately developed production-grade Python RAG framework</strong>,
+            of which I have been the <strong>main contributor</strong>. BIT-RAG provides a complete document-to-answer
+            pipeline for enterprise RAG applications and includes specialized processing for complex, unstructured data.
+          </p>
+          <p>
+            For complex PDF documents, the ingestion pipeline combines techniques such as <strong>OCR, document layout
+            detection, and table detection</strong> to reliably extract and structure information that would otherwise be
+            difficult to process. The extracted content is then transformed and prepared for RAG through specialized
+            document processing, chunking, retrieval, and ranking methods.
+          </p>
+          <p>
+            BIT-RAG also supports <strong>hybrid dense and sparse retrieval, semantic/contextual chunking, and LLM-based
+            reranking</strong>, with integrations for technologies such as Milvus and OpenSearch. This enables the system to
+            retrieve relevant information from large document collections and provide the LLM with the context required
+            to generate grounded responses.
+          </p>
+        </div>
+      </section>
+
+      <section class="case__section reveal">
+        <div class="section__head">
+          <span class="section__label">03 · My Contribution</span>
+          <span class="section__rule" aria-hidden="true"></span>
+        </div>
+        <div class="case__body">
+          <p>
+            I was responsible for the <strong>entire Backend and AI implementation</strong> of the Deutsche Bahn project.
+            My contribution covered the complete AI pipeline, including the integration and application of BIT-RAG for
+            document processing and RAG, as well as the backend services required to connect the AI capabilities with
+            the application.
+          </p>
+          <p>
+            In parallel, I was the <strong>main contributor to BIT-RAG</strong>, developing and extending the framework's
+            capabilities for enterprise document ingestion, unstructured-data processing, retrieval, and RAG-based
+            applications.
+          </p>
+        </div>
+      </section>
+
+      <section class="case__section reveal">
+        <div class="section__head">
+          <span class="section__label">04 · Outcome</span>
+          <span class="section__rule" aria-hidden="true"></span>
+        </div>
+        <div class="case__body">
+          <p>
+            The solution reduced manual research and administrative effort, accelerated the preparation of stakeholder
+            responses, and made the overall communication workflow more transparent. The combination of advanced document
+            processing, production RAG infrastructure, LLM-based response generation, and human review enabled AI to
+            support the process while keeping final decisions with the responsible project experts.
+          </p>
+          <p>
+            From a technical perspective, the project combined <strong>enterprise RAG, advanced PDF and unstructured-data
+            processing, LLM-based retrieval and generation, backend engineering, and a human-in-the-loop workflow</strong>
+            into a production AI application for Deutsche Bahn.
+          </p>
+        </div>
+      </section>
+
+      <a href="index.html#experience" class="case__back case__back--bottom">&larr; Back to Experience</a>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Lorenc Zhuka · <span id="year"></span></p>
+      <p>AI Engineer &amp; Founder</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
