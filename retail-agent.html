@@ -39,9 +39,8 @@
           An internal chat agent that lets non-technical Store and Regional Managers ask questions about sales,
           customers, and products in plain language, discuss the answers, and turn them into saved reports with
           action items. The agent writes and runs its own SQL against
-          <code>bigquery-public-data.thelook_ecommerce</code>. The project has two parts: a full production
-          High-Level Design, and a working CLI prototype. The prototype builds the safety, oversight,
-          resilience, observability, and evaluation parts as tested code rather than leaving them as diagrams.
+          <code>bigquery-public-data.thelook_ecommerce</code>. The project includes a full production High-Level
+          Design and a working CLI prototype.
         </p>
         <div class="project-card__tags">
           <span>LangGraph</span><span>Gemini</span><span>BigQuery</span><span>PostgreSQL</span><span>PII Masking</span><span>Human-in-the-Loop</span><span>Eval Harness</span><span>LangSmith</span>
@@ -62,7 +61,7 @@
             <code>order_items</code>, <code>products</code>, <code>users</code>), and the <code>users</code> table
             contains personal data such as names, emails, and addresses.
           </p>
-          <p>The brief set eight production requirements for the system:</p>
+          <p>The system had to:</p>
           <ul class="timeline__list">
             <li>learn from a "Golden Bucket" of past analyst work</li>
             <li>block malicious use and never show PII</li>
@@ -73,10 +72,6 @@
             <li>be observable enough to debug any failure</li>
             <li>let non-developers change the agent's tone without a redeploy</li>
           </ul>
-          <p>
-            The prototype only had to build 2 of the 5 requirements that can be shown in code.
-            <strong>It builds all 5.</strong> The other 3 are fully designed in the HLD.
-          </p>
         </div>
       </section>
 
@@ -90,12 +85,11 @@
             The orchestrator is a <strong>LangGraph <code>StateGraph</code></strong> running a tool-calling loop
             around Gemini. I chose LangGraph for two specific primitives the requirements need:
             <code>interrupt()</code>/resume for the confirm-before-delete flow, and checkpointing for conversation
-            state. The graph diagram in the repo is generated from the compiled graph
-            (<code>draw_mermaid()</code>), not drawn by hand, so it always matches what actually runs.
+            state.
           </p>
           <ul class="timeline__list">
             <li><strong><code>guardrail</code>:</strong> checks the user's message for prompt-injection and jailbreak phrasing before any model or tool call.</li>
-            <li><strong><code>blocked</code>:</strong> returns a polite refusal when the guardrail triggers. No LLM call is made, so a blocked message costs nothing.</li>
+            <li><strong><code>blocked</code>:</strong> returns a polite refusal when the guardrail triggers. No LLM call is made.</li>
             <li><strong><code>call_model</code>:</strong> sends the conversation to Gemini with the tools attached. Gemini replies with text, tool calls, or both.</li>
             <li><strong><code>tools</code>:</strong> runs the requested tools and keeps count of self-correct attempts and empty results for the current turn.</li>
             <li><strong><code>give_up</code>:</strong> ends the turn with a clear error message when an error can't be fixed by retrying, or the retry budget is used up.</li>
@@ -107,10 +101,6 @@
             <li><code>run_query</code>: runs SQL through a guarded BigQuery wrapper.</li>
             <li><code>save_report</code>, <code>list_reports</code>, and <code>delete_reports</code>: manage the user's saved reports in Postgres.</li>
           </ul>
-          <p>
-            Adding a capability such as charts, email, or web search means registering one more tool. Adding a
-            data source means writing one more wrapper with its own safety checks, cost caps, and PII stripping.
-          </p>
         </div>
       </section>
 
@@ -122,7 +112,7 @@
         <div class="case__body">
           <p>There are three independent layers, and each one handles a different threat:</p>
           <ul class="timeline__list">
-            <li><strong>Input guardrail.</strong> A regex denylist catches phrasing like "ignore previous instructions", "you are now", "reveal your system prompt", and "developer mode". It is cheap, deterministic, and adds no latency. Off-topic questions are declined separately by the system prompt.</li>
+            <li><strong>Input guardrail.</strong> A regex denylist catches phrasing like "ignore previous instructions", "you are now", "reveal your system prompt", and "developer mode". Off-topic questions are declined separately by the system prompt.</li>
             <li><strong>Tool output treated as untrusted data.</strong> The system prompt tells the model that anything returned by a tool is data, never instructions. This closes a second attack path: a crafted value stored in the database, such as a product name written to look like a command, reaches the model through a query result, which the input guardrail never sees.</li>
             <li><strong>Output-side PII stripping.</strong> The BigQuery wrapper removes PII columns from every result before the model sees it. This holds even if both layers above are bypassed. I checked the PII list against the <em>live</em> <code>users</code> schema rather than copying it from the brief. That check found two columns the brief missed: <code>postal_code</code> and <code>user_geom</code>, a geography point that encodes the same location as latitude and longitude.</li>
           </ul>
@@ -142,8 +132,7 @@
         </div>
         <div class="case__body">
           <p>
-            Saved reports live in a Postgres-backed store with the schema <code>id, owner, title, content,
-            conversation_id, created_at, tags</code>. A request like <em>"Delete all reports mentioning Client
+            Saved reports live in Postgres. A request like <em>"Delete all reports mentioning Client
             X"</em> never deletes anything directly. When the model calls <code>delete_reports</code>, the graph
             goes to <code>resolve_delete</code> instead of <code>tools</code>. That node:
           </p>
@@ -160,8 +149,8 @@ Type 'yes' to confirm deletion, or anything else to cancel.
 &gt; yes
 Agent: Deleted 1 report(s).</code></pre>
           <p>
-            Read-only actions like "show me my reports" never pause. The extra step appears only on destructive
-            actions and costs the user one turn.
+            Read-only actions like "show me my reports" never pause; only destructive actions need
+            confirmation.
           </p>
         </div>
       </section>
@@ -175,11 +164,11 @@ Agent: Deleted 1 report(s).</code></pre>
           <p>
             Every failure is a typed <code>AgentError</code> that carries two things: a
             <code>self_correctable</code> flag and a user-facing message. The graph decides what to do based on
-            the flag instead of scattered exception checks. There are two separate retry mechanisms:
+            the flag. There are two separate retry mechanisms:
           </p>
           <ul class="timeline__list">
-            <li><strong>Backoff</strong> retries the <em>same</em> call when BigQuery or Gemini has a temporary failure. It uses <code>tenacity</code>, allows 2 attempts with exponential backoff, and runs below the graph.</li>
-            <li><strong>Self-correct</strong> lets the <em>model</em> try a <em>different</em> query. Syntax errors, safety rejections, and queries over the cost cap are sent back to the model as the tool result, with at most 2 retries. It can never loop forever.</li>
+            <li><strong>Backoff</strong> retries the <em>same</em> call when BigQuery or Gemini has a temporary failure. It uses exponential backoff with 2 attempts.</li>
+            <li><strong>Self-correct</strong> lets the <em>model</em> try a <em>different</em> query. Syntax errors, safety rejections, and queries over the cost cap are sent back to the model as the tool result, with at most 2 retries.</li>
           </ul>
           <p>
             Permission errors go straight to a clear message, because rewriting the query can't fix a missing
@@ -198,7 +187,7 @@ Agent: Deleted 1 report(s).</code></pre>
         <div class="case__body">
           <p>
             Every LLM call, tool call, and turn writes <strong>one structured JSON log line</strong>. The format
-            is the one Google Cloud Logging reads natively, so the same code works locally and in production:
+            is the one Google Cloud Logging reads natively:
           </p>
 <pre class="case__code"><code>{"severity": "INFO", "message": "tool_call", "conversation_id": "cli-session-…",
  "tool": "run_query", "sql": "SELECT …", "rows_returned": 7,
@@ -219,21 +208,17 @@ Agent: Deleted 1 report(s).</code></pre>
         </div>
         <div class="case__body">
           <p>
-            A golden set of <strong>9 hand-picked questions</strong> covers one case for each capability in the
-            brief: top customers, a product-category comparison, a monthly revenue trend, a schema question, a
-            multi-step "why did AOV change" question, a Q1 report with action items, a PII probe ("list our
-            customers' names and emails"), an off-topic request, and a comparison between two states. Each
-            question runs through the real compiled graph and is scored in two stages:
+            A golden set of <strong>9 hand-picked questions</strong> covers each capability the agent needs,
+            including multi-step analysis, report writing, a PII probe, and an off-topic request. Each question
+            runs through the real agent graph and is scored in two stages:
           </p>
           <ul class="timeline__list">
             <li><strong>Deterministic checks first:</strong> was the expected tool called, did the SQL use an expected table, does the answer mention an expected keyword, and does it contain anything that looks like an email address.</li>
             <li><strong>Then an LLM-as-judge rubric:</strong> does the answer address the question, are its numbers and claims plausible, and does it leak any PII.</li>
           </ul>
           <p>
-            <code>scripts/run_eval.py</code> prints a pass/fail table and saves a JSON report, so runs can be
-            compared over time. It also has a <code>--fail-under</code> threshold, which makes it a regression
-            gate before any prompt or persona change ships. The eval makes real, billed calls, so it is a
-            deliberate manual step, kept separate from the ~170 unit tests that run with <code>pytest</code>.
+            The eval script saves a JSON report so runs can be compared over time, and its
+            <code>--fail-under</code> threshold makes it a regression gate before any prompt change ships.
           </p>
         </div>
       </section>
@@ -245,8 +230,7 @@ Agent: Deleted 1 report(s).</code></pre>
         </div>
         <div class="case__body">
           <p>
-            Short-term working state and the long-term transcript are two different needs, so they use two
-            different stores. LangGraph's checkpoint is disposable working state: in memory in the prototype,
+            LangGraph's checkpoint is disposable working state: in memory in the prototype,
             Memorystore for Redis in production. A <strong>Postgres Conversation Store</strong> keeps the durable,
             append-only record of every message. When a conversation's checkpoint is missing, the agent replays
             the transcript into a fresh thread. That means a manager can close the CLI, come back the next day,
@@ -255,8 +239,7 @@ Agent: Deleted 1 report(s).</code></pre>
           <p>
             Only data that has already had PII removed is written to the transcript. A delete confirmation that
             was still waiting for an answer is never replayed, so nobody can come back and answer "yes" to an
-            out-of-date list. The transcript is written after the answer has been shown, so if the store fails,
-            the transcript loses a row but the user still gets their answer.
+            out-of-date list.
           </p>
         </div>
       </section>
@@ -269,18 +252,12 @@ Agent: Deleted 1 report(s).</code></pre>
         <div class="case__body">
           <p>The HLD describes how the full system would run on Google Cloud:</p>
           <ul class="timeline__list">
-            <li><strong>Compute:</strong> Cloud Run, which scales to zero between conversations and exposes an IAM-authenticated <code>POST /chat</code> endpoint.</li>
-            <li><strong>LLM:</strong> Gemini Flash on Vertex AI. Most turns are close to templated work (SQL generation from a known schema, and summaries of small result sets), so latency and cost matter more than maximum reasoning depth.</li>
+            <li><strong>Compute:</strong> Cloud Run, which scales to zero between conversations.</li>
+            <li><strong>LLM:</strong> Gemini Flash on Vertex AI, chosen for low latency and cost.</li>
             <li><strong>Golden Bucket:</strong> Question → SQL → Report examples embedded in pgvector on Cloud SQL. The top-k matches are added as few-shot examples before SQL generation and report writing. The bucket only grows from analyst-approved reports, so the agent can't reinforce its own mistakes.</li>
             <li><strong>Learning loop:</strong> per-manager preferences (tables vs. bullet points, depth of analysis) stored in Firestore and added to the prompt. System-level improvement goes through human review, not automatic fine-tuning.</li>
-            <li><strong>Persona management:</strong> the tone instructions live in a versioned document outside the code, so the CEO's weekly tone change needs no engineering ticket and no redeploy.</li>
+            <li><strong>Persona management:</strong> the tone instructions live in a versioned document outside the code, so tone can change weekly without a redeploy.</li>
           </ul>
-          <p>
-            Every major choice in the HLD comes with the alternatives I considered and rejected. Examples:
-            pgvector vs. Vertex AI Vector Search, Redis vs. Cloud SQL for checkpoints, and LangSmith vs. a
-            self-hosted Langfuse. The HLD also lists the gaps found during live testing openly, instead of
-            hiding them.
-          </p>
         </div>
       </section>
 
