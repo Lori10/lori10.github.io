@@ -91,7 +91,7 @@
             <div class="stack__group">
               <h5>GenAI / LLM</h5>
               <div class="tags">
-                <span class="tag">RAG pipelines</span><span class="tag">LangChain</span><span class="tag">Hugging Face Transformers</span><span class="tag">Agents (ReAct, tool use, function calling, multi-agent)</span><span class="tag">Prompt engineering</span><span class="tag">LLM evaluation</span>
+                <span class="tag">RAG pipelines</span><span class="tag">LangChain</span><span class="tag">LangGraph</span><span class="tag">Hugging Face Transformers</span><span class="tag">Agents (ReAct, tool use, function calling, MCP, multi-agent)</span><span class="tag">Prompt engineering</span><span class="tag">LLM evaluation</span><span class="tag">LangSmith</span><span class="tag">Human-in-the-loop</span><span class="tag">Guardrails &amp; PII masking</span>
               </div>
             </div>
             <div class="stack__group">
@@ -103,19 +103,25 @@
             <div class="stack__group">
               <h5>ML / DL / NLP</h5>
               <div class="tags">
-                <span class="tag">PyTorch</span><span class="tag">TensorFlow</span><span class="tag">scikit-learn</span><span class="tag">spaCy</span>
+                <span class="tag">PyTorch</span><span class="tag">TensorFlow</span><span class="tag">scikit-learn</span><span class="tag">spaCy</span><span class="tag">Fine-tuning (BERT, T5, SetFit)</span>
               </div>
             </div>
             <div class="stack__group">
               <h5>Data &amp; Retrieval</h5>
               <div class="tags">
-                <span class="tag">Vector databases (Milvus, pgvector)</span><span class="tag">Embeddings</span><span class="tag">Semantic search</span><span class="tag">OCR (Tesseract)</span>
+                <span class="tag">Vector databases (Milvus, pgvector)</span><span class="tag">Embeddings</span><span class="tag">Semantic &amp; hybrid search (OpenSearch, Elasticsearch)</span><span class="tag">PostgreSQL</span><span class="tag">Redis</span><span class="tag">BigQuery</span><span class="tag">OCR (Tesseract, PaddleOCR)</span>
               </div>
             </div>
             <div class="stack__group">
               <h5>Languages &amp; Tools</h5>
               <div class="tags">
-                <span class="tag">Python</span><span class="tag">SQL</span><span class="tag">JavaScript/React</span><span class="tag">Git</span><span class="tag">AWS</span>
+                <span class="tag">Python</span><span class="tag">SQL</span><span class="tag">JavaScript/React</span><span class="tag">Git</span>
+              </div>
+            </div>
+            <div class="stack__group">
+              <h5>LLM Providers &amp; Cloud</h5>
+              <div class="tags">
+                <span class="tag">OpenAI API</span><span class="tag">Azure OpenAI</span><span class="tag">Gemini / Vertex AI</span><span class="tag">GCP (Cloud Run, Cloud SQL)</span><span class="tag">Azure</span><span class="tag">AWS</span>
               </div>
             </div>
           </div>
@@ -276,7 +282,7 @@
           <span class="project-card__number">05</span>
           <div>
             <h4 class="project-card__title">Autonomous AI Research Agent with BabyAGI</h4>
-            <p class="project-card__desc">AI-powered task management system that generates, prioritizes, and executes tasks using an LLM and vector databases, extending BabyAGI with an answer-generation model that retrieves research papers from arXiv, ChemRxiv, and PubMed via semantic search.</p>
+            <p class="project-card__desc">Autonomous agent that answers research questions with factual, referenced answers by orchestrating three LLMs: a task-generation LLM breaks the objective into a task list, a task-execution LLM works through each task and stores enriched results in a vector database (Chroma or Weaviate), and a prioritization LLM re-ranks the remaining tasks based on progress so far. Extends the open-source BabyAGI with a final answer-generation LLM and fixes to its task generation. The execution step pulls papers from arXiv, ChemRxiv, and PubMed through their APIs and runs semantic search over them to ground GPT-3.5-turbo. Results come back as structured JSON with the answer and the source paper it relied on.</p>
             <div class="project-card__tags">
               <span>GPT-3.5-turbo</span><span>Vector DB</span><span>LLM Agents</span>
             </div>
@@ -288,7 +294,7 @@
           <span class="project-card__number">06</span>
           <div>
             <h4 class="project-card__title">Autonomous AI Research Agent with ReAct</h4>
-            <p class="project-card__desc">Custom AI agent using ReAct logic to combine reasoning and action, generating factual, reference-backed answers from research publications via multi-step self-questioning and query decomposition.</p>
+            <p class="project-card__desc">Research agent built on the ReAct pattern, which interleaves chain-of-thought reasoning with tool calls. It breaks a question into sub-questions and keeps questioning and answering itself until it can answer the original question with confidence. For each sub-question, a custom tool retrieves relevant papers from arXiv, ChemRxiv, PubMed, and other sources, then runs semantic search over them so GPT-3.5-turbo answers from the retrieved text rather than from memory. The final JSON output contains the answer and the reference paper it came from, so it plugs straight into downstream tools.</p>
             <div class="project-card__tags">
               <span>ReAct</span><span>GPT-3.5-turbo</span><span>Semantic Search</span>
             </div>
@@ -300,7 +306,7 @@
           <span class="project-card__number">07</span>
           <div>
             <h4 class="project-card__title">Text Classification with SETFIT</h4>
-            <p class="project-card__desc">Few-shot text classification using SETFIT, fine-tuning a pre-trained Sentence Transformer in a contrastive Siamese manner, with a novel sampling method and public code/data release.</p>
+            <p class="project-card__desc">Research study on prompt-free few-shot text classification with SETFIT. It fine-tunes a pre-trained Sentence Transformer on sentence pairs in a contrastive Siamese setup, then trains a classification head on the resulting embeddings. Benchmarked on SST-2, SentEval-CR, and ADE-corpus-v2 over 5 random splits against standard BERT fine-tuning. With 18 training samples, SETFIT beat fine-tuned BERT by an average of 22.6 accuracy points and trained an order of magnitude faster. I also proposed a hard negative/positive sampling method for building the contrastive pairs, which beat SETFIT's default random sampling by 1.1 points on average at 50 samples. The code, data, and full write-up are public.</p>
             <div class="project-card__tags">
               <span>SETFIT</span><span>Sentence Transformers</span><span>Few-Shot</span>
             </div>
@@ -312,7 +318,7 @@
           <span class="project-card__number">08</span>
           <div>
             <h4 class="project-card__title">Loan Approval Prediction</h4>
-            <p class="project-card__desc">Predicts loan application approval on 100,000+ imbalanced records, using scikit-learn pipelines to prevent data leakage during upsampling/downsampling with cross-validation, deployed as a Flask web app.</p>
+            <p class="project-card__desc">Classifier that predicts whether a loan application will be approved from financial and loan-request features, trained on a highly imbalanced dataset of 100,000+ records. Handled the class imbalance with class weighting (<code>scale_pos_weight</code>, <code>class_weight</code>), an Easy Ensemble classifier, and up/downsampling. The resampling runs inside scikit-learn pipelines so that only the training folds are resampled during cross-validation, which prevents data leakage. Compared XGBoost, Random Forest, and Easy Ensemble tuned with RandomizedSearchCV on AUC, and selected features with recursive feature elimination. Built with object-oriented code and served through a Flask web app that supports retraining, with logging of each cleaning and training run.</p>
             <div class="project-card__tags">
               <span>Scikit-learn</span><span>Flask</span><span>Python</span>
             </div>
@@ -324,7 +330,7 @@
           <span class="project-card__number">09</span>
           <div>
             <h4 class="project-card__title">Real Estate Price Prediction</h4>
-            <p class="project-card__desc">Bengaluru house price prediction on 13,000+ records, addressing dirty data through extensive preprocessing, feature engineering, and outlier treatment, with a Flask web application front end.</p>
+            <p class="project-card__desc">Regression model that predicts Bengaluru house prices from 13,000+ very messy Kaggle listings. Most of the work was data cleaning: <code>total_sqft</code> values came in mixed units (sq. yards, acres, guntha, cents) and were converted to square feet, and high-cardinality locations were grouped into their top categories before one-hot encoding. Outliers were removed with business rules from a real-estate domain expert, such as a 300 sqft-per-bedroom minimum and price-per-sqft bands for each location. Compared Linear Regression, Random Forest, and KNN inside leak-free pipelines covering feature selection, scaling, and RandomizedSearchCV tuning. Random Forest scored best with a test R² of 0.88. Served through a Flask web app with retraining and training-history logging.</p>
             <div class="project-card__tags">
               <span>Scikit-learn</span><span>Flask</span><span>Regression</span>
             </div>
@@ -336,7 +342,7 @@
           <span class="project-card__number">10</span>
           <div>
             <h4 class="project-card__title">Traffic Sign Recognition with CNN</h4>
-            <p class="project-card__desc">Automatic recognition of 43 traffic sign types with deep neural networks, using hyperparameter tuning via KerasTuner RandomSearch, early stopping, data augmentation, and VGG16 transfer learning.</p>
+            <p class="project-card__desc">Computer-vision classifier for 43 types of traffic signs, the kind of recognition used in self-driving and driver-assistance systems. Preprocessing converted images to grayscale, normalized them, and shuffled them. Starting from a LeNet-style CNN, I tried several ways to reduce overfitting and improve generalization: early stopping, hyperparameter search with KerasTuner RandomSearch, data augmentation, and transfer learning from VGG16. Each model was compared on training, validation, and test accuracy and loss. The tuned LeNet gave the best balance, with about 94% test accuracy and a much lower test loss than the baseline. Served through a Flask web app.</p>
             <div class="project-card__tags">
               <span>CNN</span><span>Keras</span><span>Transfer Learning</span>
             </div>
@@ -348,7 +354,7 @@
           <span class="project-card__number">11</span>
           <div>
             <h4 class="project-card__title">Grammar Checker and Corrector</h4>
-            <p class="project-card__desc">NLP system combining a bigram language model for error detection with a fine-tuned T5 Transformer for classification and correction, using k-smoothing and threshold optimization.</p>
+            <p class="project-card__desc">Two-stage grammar tool. The first stage is a bigram language model written from scratch: it counts n-grams, adds sentence start and end markers, applies add-k smoothing, and scores how probable each sentence is, flagging it as incorrect if the score falls below a threshold. The k-smoothing value and the threshold were tuned together to maximize F1 on incorrect sentences, raising AUC from 0.67 to 0.83 and recall to 1.0. The second stage uses a fine-tuned T5 Transformer to classify sentences and rewrite the incorrect ones. Served through a Flask web app.</p>
             <div class="project-card__tags">
               <span>T5</span><span>N-gram LM</span><span>Flask</span>
             </div>
@@ -360,7 +366,7 @@
           <span class="project-card__number">12</span>
           <div>
             <h4 class="project-card__title">Question Answering System with BERT</h4>
-            <p class="project-card__desc">NLP-based Q&amp;A system that generates answers from knowledge bases or text paragraphs by fine-tuning the BERT Transformer to process context and questions.</p>
+            <p class="project-card__desc">Extractive question-answering system that fine-tunes a pre-trained BERT Transformer to read a question together with a context passage and return the answer span from the text. It works on single paragraphs or across a larger knowledge base, so users can ask questions in natural language and get answers taken directly from their own documents without writing answers by hand.</p>
             <div class="project-card__tags">
               <span>BERT</span><span>Transformers</span><span>Python</span>
             </div>
