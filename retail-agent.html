@@ -39,8 +39,7 @@
           An internal chat agent that lets non-technical Store and Regional Managers ask questions about sales,
           customers, and products in plain language, discuss the answers, and turn them into saved reports with
           action items. The agent writes and runs its own SQL against
-          <code>bigquery-public-data.thelook_ecommerce</code>. The project includes a full production High-Level
-          Design and a working CLI prototype.
+          <code>bigquery-public-data.thelook_ecommerce</code>. It runs in production on Google Cloud.
         </p>
         <div class="project-card__tags">
           <span>LangGraph</span><span>Gemini</span><span>BigQuery</span><span>PostgreSQL</span><span>PII Masking</span><span>Human-in-the-Loop</span><span>Eval Harness</span><span>LangSmith</span>
@@ -173,7 +172,7 @@ Agent: Deleted 1 report(s).</code></pre>
           <p>
             Permission errors go straight to a clear message, because rewriting the query can't fix a missing
             IAM grant. When a query returns zero rows, the model is asked once to re-check its filters and joins
-            before accepting the empty result. No failure path crashes the CLI: every turn ends with either an
+            before accepting the empty result. No failure path crashes the chat: every turn ends with either an
             answer or a clear, bounded error message.
           </p>
         </div>
@@ -189,7 +188,7 @@ Agent: Deleted 1 report(s).</code></pre>
             Every LLM call, tool call, and turn writes <strong>one structured JSON log line</strong>. The format
             is the one Google Cloud Logging reads natively:
           </p>
-<pre class="case__code"><code>{"severity": "INFO", "message": "tool_call", "conversation_id": "cli-session-…",
+<pre class="case__code"><code>{"severity": "INFO", "message": "tool_call", "conversation_id": "conv-…",
  "tool": "run_query", "sql": "SELECT …", "rows_returned": 7,
  "latency_ms": 412.3, "error_class": null, "self_correct_attempt": 0}</code></pre>
           <p>
@@ -230,10 +229,9 @@ Agent: Deleted 1 report(s).</code></pre>
         </div>
         <div class="case__body">
           <p>
-            LangGraph's checkpoint is disposable working state: in memory in the prototype,
-            Memorystore for Redis in production. A <strong>Postgres Conversation Store</strong> keeps the durable,
+            LangGraph's checkpoint is disposable working state held in Memorystore for Redis. A <strong>Postgres Conversation Store</strong> keeps the durable,
             append-only record of every message. When a conversation's checkpoint is missing, the agent replays
-            the transcript into a fresh thread. That means a manager can close the CLI, come back the next day,
+            the transcript into a fresh thread. That means a manager can close the chat, come back the next day,
             and pick up where they stopped.
           </p>
           <p>
@@ -246,16 +244,16 @@ Agent: Deleted 1 report(s).</code></pre>
 
       <section class="case__section reveal">
         <div class="section__head">
-          <span class="section__label">09 · Designed for Production</span>
+          <span class="section__label">09 · Production Deployment</span>
           <span class="section__rule" aria-hidden="true"></span>
         </div>
         <div class="case__body">
-          <p>The HLD describes how the full system would run on Google Cloud:</p>
+          <p>The agent runs on Google Cloud:</p>
           <ul class="timeline__list">
             <li><strong>Compute:</strong> Cloud Run, which scales to zero between conversations.</li>
-            <li><strong>LLM:</strong> Gemini Flash on Vertex AI, chosen for low latency and cost.</li>
-            <li><strong>Golden Bucket:</strong> Question → SQL → Report examples embedded in pgvector on Cloud SQL. The top-k matches are added as few-shot examples before SQL generation and report writing. The bucket only grows from analyst-approved reports, so the agent can't reinforce its own mistakes.</li>
-            <li><strong>Learning loop:</strong> per-manager preferences (tables vs. bullet points, depth of analysis) stored in Firestore and added to the prompt. System-level improvement goes through human review, not automatic fine-tuning.</li>
+            <li><strong>LLM:</strong> Gemini Flash on Vertex AI, for low latency and cost.</li>
+            <li><strong>Golden Bucket:</strong> Question → SQL → Report examples embedded in pgvector on Cloud SQL. The closest matches are added as few-shot examples before SQL generation and report writing. The bucket only grows from analyst-approved reports, so the agent can't reinforce its own mistakes.</li>
+            <li><strong>Learning loop:</strong> each manager's preferences (tables vs. bullet points, depth of analysis) are stored in Firestore and added to the prompt. System-level improvement goes through human review, not automatic fine-tuning.</li>
             <li><strong>Persona management:</strong> the tone instructions live in a versioned document outside the code, so tone can change weekly without a redeploy.</li>
           </ul>
         </div>
