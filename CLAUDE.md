@@ -1,6 +1,6 @@
 # MyWebsite
 
-Personal portfolio site for Lorenc Zhuka (Lead AI Engineer / Founder). Single-page,
+Personal portfolio site for Lorenc Zhuka (Founder / Lead AI Engineer). Single-page,
 plain HTML/CSS/JS — no build step, no dependencies, no framework.
 
 Modeled on https://www.safeerahmad.space/ (minimalist, light, numbered sections,
