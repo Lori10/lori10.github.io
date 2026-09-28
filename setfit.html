@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Text Classification with SETFIT — Lorenc Zhuka</title>
+  <meta name="description" content="A research study on prompt-free few-shot text classification with SETFIT, benchmarked against BERT fine-tuning on three datasets, plus a proposed hard negative/positive sampling method for contrastive pair generation." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Philosopher:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="index.html" class="nav__logo">Lorenc Zhuka</a>
+      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav__links" id="navLinks">
+        <li><a href="index.html#about" class="nav__link">About</a></li>
+        <li><a href="index.html#experience" class="nav__link">Experience</a></li>
+        <li><a href="index.html#projects" class="nav__link">Projects</a></li>
+        <li><a href="index.html#contact" class="nav__link">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <article class="case container">
+      <a href="index.html#projects" class="case__back">&larr; Back to Projects</a>
+
+      <header class="case__header reveal">
+        <h1 class="case__title">Text Classification with SETFIT</h1>
+        <p class="case__lead">
+          A research study, written at Hochschule Darmstadt, on SETFIT: a prompt-free way to train a text classifier
+          from only a handful of labeled examples. I reproduced the method, benchmarked it against standard BERT
+          fine-tuning on three datasets, and proposed a new way to build its contrastive training pairs, which I
+          called hard negative/positive sampling. The code, data, and full write-up are public.
+        </p>
+        <div class="project-card__tags">
+          <span>SETFIT</span><span>Sentence Transformers</span><span>Few-Shot</span><span>Contrastive Learning</span><span>Hugging Face</span><span>BERT</span><span>scikit-learn</span>
+        </div>
+        <a href="https://github.com/Lori10/Text-Classification-SETFIT" class="timeline__link" target="_blank" rel="noopener">View the code on GitHub &rarr;</a>
+      </header>
+
+      <section class="case__section reveal">
+        <div class="section__head">
+          <span class="section__label">01 · The Problem</span>
+          <span class="section__rule" aria-hidden="true"></span>
+        </div>
+        <div class="case__body">
+          <p>
+            Labeling data is slow and expensive, so many real classification tasks start with only a few dozen
+            labeled examples. The usual options each have a catch:
+          </p>
+          <ul class="timeline__list">
+            <li><strong>Standard fine-tuning</strong> updates every parameter of a model like BERT. It needs a reasonably large dataset to work well and is costly to train.</li>
+            <li><strong>In-context learning</strong> with large language models works with few examples, but its accuracy grows with model size, so it depends on models with billions of parameters and the infrastructure to run them.</li>
+            <li><strong>Prompt-based methods</strong> such as pattern-exploiting training and many parameter-efficient fine-tuning setups need hand-written prompts, and results vary with how well those prompts are written.</li>
+          </ul>
+          <p>
+            SETFIT (Tunstall et al., 2022) avoids all three: it needs no prompts and uses a comparatively small
+            Sentence Transformer. The questions for this study were whether its reported results hold up in my
+            own experiments, and whether the way it builds training pairs could be improved.
+          </p>
+        </div>
+      </section>
+
+      <section class="case__section reveal">
+        <div class="section__head">
+          <span class="section__label">02 · How SETFIT Works</span>
+          <span class="section__rule" aria-hidden="true"></span>
+        </div>
+        <div class="case__body">
+          <p>SETFIT trains in two steps:</p>
+          <ul class="timeline__list">
+            <li><strong>Step 1: contrastive fine-tuning of a Sentence Transformer.</strong> From the few labeled sentences, SETFIT generates sentence pairs labeled 1 (same class) or 0 (different class). The Sentence Transformer is fine-tuned on these pairs in a Siamese setup: both sentences go through the same network with shared weights, and a cosine-similarity loss pulls same-class pairs together and pushes different-class pairs apart.</li>
+            <li><strong>Step 2: a classification head.</strong> The fine-tuned model encodes each original training sentence into one embedding. A logistic regression is trained on these embeddings and their labels.</li>
+          </ul>
+          <p>
+            At prediction time, the fine-tuned Sentence Transformer encodes the new sentence and the logistic
+            regression predicts its class.
+          </p>
+<pre class="case__code"><code>few labeled sentences
+  → generate pairs (s_i, s_j, 1) / (s_i, s_k, 0)
+  → fine-tune Sentence Transformer (Siamese, cosine-similarity loss)
+  → encode training sentences → train logistic regression
+predict:  label = LogReg( ST(new_sentence) )</code></pre>
+          <p>
+            Pair generation is what makes this work with so little data. With M labeled examples there are
+            M(M&minus;1)/2 possible unique pairs, far more than M itself, so the contrastive step has much more
+            to learn from than the raw dataset. Because pairs are built from class labels rather than meaning,
+            fine-tuning turns general-purpose sentence embeddings into what I call <em>topic embeddings</em>:
+            embeddings organised by the task's classes.
+          </p>
+        </div>
+      </section>
+
+      <section class="case__section reveal">
+        <div class="section__head">
+          <span class="section__label">03 · My Contribution: Hard Negative/Positive Sampling</span>
+          <span class="section__rule" aria-hidden="true"></span>
+        </div>
+        <div class="case__body">
+          <p>
+            SETFIT's default pair generation is random: for each sentence <code>s_i</code> it picks a random
+            same-class sentence as the positive and a random other-class sentence as the negative, and repeats
+            this for N iterations. Many of these pairs are easy. A positive that is already close to
+            <code>s_i</code>, or a negative that is already far away, teaches the model very little.
+          </p>
+          <p>I replaced the random choice with a deliberate one. For each sentence <code>s_i</code> and each iteration:</p>
+          <ul class="timeline__list">
+            <li><strong>Hard positive:</strong> pick the same-class sentence with the <em>lowest</em> cosine similarity to <code>s_i</code>, meaning the one the model currently thinks is least alike.</li>
+            <li><strong>Hard negative:</strong> pick the other-class sentence with the <em>highest</em> cosine similarity to <code>s_i</code>, meaning the one the model most easily confuses with it.</li>
+            <li><strong>No repeats:</strong> remove both chosen sentences from the candidate pool for <code>s_i</code>, so the next iteration picks the next-hardest pair instead of the same one again.</li>
+          </ul>
+<pre class="case__code"><code>for each sentence s_i, for n in 1..N:
+    s_j = argmin cos_sim(s_i, s)  over same-class candidates   → (s_i, s_j, 1)
+    s_k = argmax cos_sim(s_i, s)  over other-class candidates  → (s_i, s_k, 0)
+    remove s_j, s_k from s_i's candidates</code></pre>
+          <p>
+            The idea is to spend each training step where the embedding space is currently wrong. I expected it
+            to help most with a small number of iterations N and a larger number of training examples M, since
+            more examples means more genuinely hard pairs to find.
+          </p>
+        </div>
+      </section>
+
+      <section class="case__section reveal">
+        <div class="section__head">
+          <span class="section__label">04 · Experimental Setup</span>
+          <span class="section__rule" aria-hidden="true"></span>
+        </div>
+        <div class="case__body">
+          <ul class="timeline__list">
+            <li><strong>Datasets:</strong> three binary classification sets from the SetFit organisation on the Hugging Face Hub: SST-2 (movie review sentiment), SentEval-CR (customer review sentiment), and ADE-corpus-v2 (whether a medical sentence reports an adverse drug event).</li>
+            <li><strong>Training sizes:</strong> M = 18 and M = 50 labeled examples <em>per class</em>, plus a larger 800-example training set for the full-data baseline.</li>
+            <li><strong>Robustness:</strong> few-shot results depend heavily on which examples are picked, so every configuration was run on 5 random training splits (seeds 10–50) and the mean accuracy is reported, following the original paper.</li>
+            <li><strong>Model:</strong> <code>all-mpnet-base-v2</code> as the Sentence Transformer. It was trained on over 1 billion sentence pairs, maps text to 768-dimensional vectors, and scored best on average across Sentence Transformers benchmarks.</li>
+            <li><strong>Hyperparameters:</strong> cosine-similarity loss, learning rate 2e-5, batch size 16, 1 epoch, 20 pair-generation iterations. The same learning rate and epoch count were used for the BERT baseline, and no method was tuned, so no approach got an unfair advantage.</li>
+          </ul>
+          <p>I compared four approaches:</p>
+          <ul class="timeline__list">
+            <li><strong>Standard fine-tuning</strong> of <code>bert-base-uncased</code> on the same few-shot data, and on the 800-example training set.</li>
+            <li><strong>SETFIT with random sampling</strong>, the library's default.</li>
+            <li><strong>SETFIT with hard negative/positive sampling</strong>, my variant.</li>
+            <li><strong>SETFIT without fine-tuning</strong> ("No Fit"): a logistic regression on the pre-trained embeddings, to isolate how much step 1 contributes.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="case__section reveal">
+        <div class="section__head">
+          <span class="section__label">05 · Results</span>
+          <span class="section__rule" aria-hidden="true"></span>
+        </div>
+        <div class="case__body">
+          <p>Mean test accuracy (%) over 5 random training splits:</p>
+          <div class="case__table-wrap">
+            <table class="case__table">
+              <thead>
+                <tr><th>Method</th><th>SST-2</th><th>SentEval-CR</th><th>ADE-corpus-v2</th><th>Average</th></tr>
+              </thead>
+              <tbody>
+                <tr class="case__table-group"><td colspan="5">M = 18 per class</td></tr>
+                <tr><td>Standard fine-tuning (BERT)</td><td>50.1</td><td>38.0</td><td>49.8</td><td>46.0</td></tr>
+                <tr><td>SETFIT, random sampling</td><td>89.1</td><td>37.7</td><td>79.1</td><td><strong>68.6</strong></td></tr>
+                <tr><td>SETFIT, hard neg./pos. sampling</td><td>89.0</td><td>37.6</td><td>78.8</td><td>68.4</td></tr>
+                <tr><td>SETFIT, no fine-tuning</td><td>83.2</td><td>38.3</td><td>71.4</td><td>64.3</td></tr>
+                <tr class="case__table-group"><td colspan="5">M = 50 per class</td></tr>
+                <tr><td>Standard fine-tuning (BERT)</td><td>70.3</td><td>50.2</td><td>62.0</td><td>57.2</td></tr>
+                <tr><td>SETFIT, random sampling</td><td>90.3</td><td>37.7</td><td>83.5</td><td>70.5</td></tr>
+                <tr><td>SETFIT, hard neg./pos. sampling</td><td>93.2</td><td>37.7</td><td>84.4</td><td><strong>71.6</strong></td></tr>
+                <tr><td>SETFIT, no fine-tuning</td><td>85.6</td><td>38.0</td><td>84.8</td><td>69.5</td></tr>
+                <tr class="case__table-group"><td colspan="5">Larger training set (800 examples)</td></tr>
+                <tr><td>Standard fine-tuning (BERT)</td><td>92.1</td><td>48.2</td><td>88.5</td><td>76.2</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ul class="timeline__list">
+            <li><strong>SETFIT vs. BERT with 18 examples per class:</strong> SETFIT was ahead by 22.6 points on average (the original paper reports 19.3). On SST-2, BERT stayed at 50.1%, which is chance level for two balanced classes, while SETFIT reached 89.1%.</li>
+            <li><strong>With 50 examples per class</strong> the gap shrank to 13.3 points (5.6 in the original paper). BERT improves quickly with more data; SETFIT was already close to its ceiling.</li>
+            <li><strong>Against BERT trained on 800 examples</strong>, SETFIT with 50 examples per class was 5.7 points behind on average. On SST-2, SETFIT with hard negative/positive sampling even beat it (93.2 vs. 92.1) with only 100 labeled examples.</li>
+            <li><strong>Hard negative/positive sampling</strong> matched random sampling at M = 18 (68.4 vs. 68.6) and beat it by 1.1 points on average at M = 50, including +2.9 on SST-2. This fits the expectation that it helps once there are enough examples to find genuinely hard pairs.</li>
+            <li><strong>Fine-tuning the Sentence Transformer matters:</strong> SETFIT beat the no-fine-tuning baseline on average at both sizes, by 4.3 points at M = 18. The exception is ADE-corpus-v2 at M = 50, where the pre-trained embeddings alone scored slightly higher (84.8 vs. 84.4), so with enough examples fine-tuning adds less on some datasets.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="case__section reveal">
+        <div class="section__head">
+          <span class="section__label">06 · Why It Works: Topic Embeddings</span>
+          <span class="section__rule" aria-hidden="true"></span>
+        </div>
+        <div class="case__body">
+          <p>
+            To see <em>why</em> SETFIT works, I encoded the SST-2 training and test sets with the pre-trained
+            model and with the fine-tuned model, reduced the embeddings to two dimensions with t-SNE, and plotted
+            them by class.
+          </p>
+          <p>
+            With the pre-trained embeddings, positive and negative reviews overlap heavily. After contrastive
+            fine-tuning, the two classes form clearly separated clusters, on unseen test data as well as on the
+            training data. Once the classes are nearly linearly separable, a simple logistic regression is enough
+            to classify them well. That is why SETFIT can use such a lightweight head, and why step 1 accounts for
+            most of the gain over the no-fine-tuning baseline.
+          </p>
+        </div>
+      </section>
+
+      <section class="case__section reveal">
+        <div class="section__head">
+          <span class="section__label">07 · Limitations</span>
+          <span class="section__rule" aria-hidden="true"></span>
+        </div>
+        <div class="case__body">
+          <ul class="timeline__list">
+            <li><strong>SentEval-CR results are not meaningful.</strong> Every method, including BERT trained on 800 examples, scored below 50% on this balanced binary task, which is worse than guessing. These numbers point to a problem with that dataset's setup rather than a finding about any method, and they pull down every average in the table. The SST-2 and ADE-corpus-v2 results are where the comparison holds.</li>
+            <li><strong>Extra cost for hard sampling:</strong> choosing hard pairs means computing the similarity of each sentence against every candidate in both classes, which takes longer than random sampling.</li>
+            <li><strong>Scope:</strong> my implementation of hard negative/positive sampling covers binary classification only and is tied to cosine similarity. SETFIT itself supports multi-class tasks and other loss functions.</li>
+            <li><strong>Scale:</strong> 3 datasets, 2 few-shot sizes, 5 seeds each, and no hyperparameter tuning. The +1.1 point gain is a promising signal, not a general result.</li>
+          </ul>
+        </div>
+      </section>
+
+      <a href="index.html#projects" class="case__back case__back--bottom">&larr; Back to Projects</a>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Lorenc Zhuka · <span id="year"></span></p>
+      <p>Founder &amp; Lead AI Engineer</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

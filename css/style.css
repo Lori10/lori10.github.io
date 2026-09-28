@@ -714,3 +714,35 @@ img { max-width: 100%; display: block; }
     font-size: 2.4rem;
   }
 }
+
+/* Results table on project deep-dive pages */
+.case__table-wrap { overflow-x: auto; }
+.case__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.case__table th,
+.case__table td {
+  padding: 0.45rem 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+  text-align: right;
+  white-space: nowrap;
+}
+.case__table th:first-child,
+.case__table td:first-child { text-align: left; }
+.case__table th {
+  color: var(--color-text);
+  font-weight: 600;
+  border-bottom-color: var(--color-text);
+}
+.case__table td { font-variant-numeric: tabular-nums; }
+.case__table-group td {
+  padding-top: 1rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  text-align: left;
+}

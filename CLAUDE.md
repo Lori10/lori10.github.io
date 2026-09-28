@@ -12,6 +12,7 @@ card-based layout).
 index.html      # all markup — one page, four sections (About, Experience, Projects, Contact)
 deutsche-bahn.html  # case-study subpage, linked from the SmartSearchAI experience entry
 retail-agent.html   # project deep-dive subpage, linked from the Retail Data Analysis Agent project card
+setfit.html         # project deep-dive subpage, linked from the Text Classification with SETFIT project card
 css/style.css   # all styling, design tokens at the top (:root)
 js/main.js      # mobile nav toggle, scroll-spy, scroll-reveal animation, footer year
 assets/         # images (profile photo, etc.)
