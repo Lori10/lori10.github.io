@@ -249,45 +249,11 @@ Agent: Deleted 1 report(s).</code></pre>
           <span class="section__rule" aria-hidden="true"></span>
         </div>
         <div class="case__body">
-          <p>
-            The agent supports the <strong>Model Context Protocol</strong> in both directions, built on the
-            official <code>mcp</code> Python SDK v2.
-          </p>
-          <p>
-            <strong>MCP server.</strong> The same data and reports tools are published over stdio to any MCP
-            client. The client brings its own model, so no
-            Gemini key is needed. The client also brings its own prompt and its own idea of when to ask the user
-            anything, so every guarantee is enforced under the tool, on the server side:
-          </p>
+          <p>The agent supports the <strong>Model Context Protocol</strong> in both directions:</p>
           <ul class="timeline__list">
-            <li><strong>PII:</strong> queries go through the same guarded BigQuery wrapper, so the read-only check, cost cap, row limit, and PII column stripping apply to every client.</li>
-            <li><strong>Owner scoping:</strong> every reports call is limited to the server's owner, the same identity the chat agent uses.</li>
-            <li><strong>Two-step delete:</strong> an MCP client never passes through the graph's <code>interrupt()</code>, so deletion is split in two. <code>preview_delete</code> deletes nothing and returns the exact candidates plus a single-use, owner-bound token that expires after 5 minutes. <code>confirm_delete(token)</code> deletes exactly the previewed reports, once. Nothing can be deleted that wasn't previewed first, and a report added between preview and confirm is never swept up.</li>
-            <li><strong>Errors:</strong> typed agent errors reach the client as readable tool errors, so the client's model can fix its SQL and retry. Unexpected exceptions are logged on the server and never leak internals.</li>
+            <li><strong>MCP server:</strong> the agent's data and reports tools are available to any MCP client. PII stripping, the SQL safety checks, and per-user report access are all enforced on the server, and deleting reports takes two steps: a preview, then an explicit confirmation.</li>
+            <li><strong>MCP client:</strong> the agent can load tools from external MCP servers, for example a time server it uses to work out what "last month" means. External tools run through the same loop as the built-in ones, their output is treated as untrusted data, and destructive tools are blocked unless explicitly allowed.</li>
           </ul>
-          <p>
-            Startup is deliberately thin: BigQuery and Postgres connect lazily on the first tool call. This
-            brought the stdio handshake down to about 2 seconds, well inside a typical client connect
-            timeout, which an earlier version that connected everything up front had missed on a cold start.
-          </p>
-          <p>
-            <strong>MCP client.</strong> Going the other way, the agent loads tools from external MCP servers
-            listed in a JSON config file. The bundled example
-            adds the official time server, which the agent uses to work out what "last month" means. External
-            tools are namespaced per server, bound to Gemini next to the built-in tools, and run through the same
-            loop, so the self-correct budget, error handling, and tracing apply unchanged and the graph needed no
-            new nodes. External servers are a new trust boundary:
-          </p>
-          <ul class="timeline__list">
-            <li>their output is treated as untrusted data, like every other tool result.</li>
-            <li>tools that declare themselves destructive are skipped unless the config explicitly allowlists them.</li>
-            <li>each tool schema is checked on its own at startup, so one bad external schema can't break the built-in tools.</li>
-            <li>an unreachable server is logged and skipped, and the agent starts with everything else.</li>
-          </ul>
-<pre class="case__code"><code>Loaded 1 external tool(s) from 1 of 1 MCP server(s).
-&gt; What was total revenue last month?
-Calling time__get_current_time...
-Running a query...</code></pre>
         </div>
       </section>
 
