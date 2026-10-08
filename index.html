@@ -91,7 +91,7 @@
             <div class="stack__group">
               <h5>GenAI / LLM</h5>
               <div class="tags">
-                <span class="tag">RAG pipelines</span><span class="tag">LangChain</span><span class="tag">LangGraph</span><span class="tag">Hugging Face Transformers</span><span class="tag">Agents (ReAct, tool use, function calling, MCP, multi-agent)</span><span class="tag">Prompt engineering</span><span class="tag">LLM evaluation</span><span class="tag">LangSmith</span><span class="tag">Human-in-the-loop</span><span class="tag">Guardrails &amp; PII masking</span>
+                <span class="tag">RAG pipelines</span><span class="tag">LangChain</span><span class="tag">LangGraph</span><span class="tag">Hugging Face Transformers</span><span class="tag">Agents (ReAct, tool use, function calling, multi-agent)</span><span class="tag">MCP (Model Context Protocol) servers &amp; clients</span><span class="tag">Prompt engineering</span><span class="tag">LLM evaluation</span><span class="tag">LangSmith</span><span class="tag">Human-in-the-loop</span><span class="tag">Guardrails &amp; PII masking</span>
               </div>
             </div>
             <div class="stack__group">
@@ -233,12 +233,12 @@
           <span class="project-card__number">01</span>
           <div>
             <h4 class="project-card__title">Retail Data Analysis Agent</h4>
-            <p class="project-card__desc">An internal LangGraph chat agent, running in production on Google Cloud (Cloud Run, Cloud SQL, Memorystore, Firestore, Vertex AI), that lets non-technical Store/Regional Managers query <code>bigquery-public-data.thelook_ecommerce</code> in natural language and turn results into saved reports. Built with schema-verified PII masking, typed/self-correcting error handling with bounded retries, an <code>interrupt()</code>-based human-in-the-loop confirm-before-delete flow on a Postgres-backed reports store, structured JSON tracing with LangSmith auto-instrumentation, and a golden-set eval harness combining deterministic checks with an LLM-as-judge rubric as a regression gate.</p>
+            <p class="project-card__desc">An internal LangGraph chat agent, running in production on Google Cloud (Cloud Run, Cloud SQL, Memorystore, Firestore, Vertex AI), that lets non-technical Store/Regional Managers query <code>bigquery-public-data.thelook_ecommerce</code> in natural language and turn results into saved reports. Built with schema-verified PII masking, typed/self-correcting error handling with bounded retries, an <code>interrupt()</code>-based human-in-the-loop confirm-before-delete flow on a Postgres-backed reports store, structured JSON tracing with LangSmith auto-instrumentation, and a golden-set eval harness combining deterministic checks with an LLM-as-judge rubric as a regression gate. The agent also speaks MCP in both directions: an MCP server exposes its data and reports tools to any MCP client (Claude Code, Claude Desktop, MCP Inspector) with PII stripping and a two-step, token-confirmed delete enforced server-side, and an MCP client lets the agent load tools from external MCP servers, with destructive tools blocked unless explicitly allowlisted.</p>
             <div class="project-card__tags">
-              <span>LangGraph</span><span>Gemini</span><span>BigQuery</span><span>PostgreSQL</span><span>PII Masking</span><span>Human-in-the-Loop</span><span>Eval Harness</span><span>LangSmith</span>
+              <span>LangGraph</span><span>Gemini</span><span>BigQuery</span><span>PostgreSQL</span><span>PII Masking</span><span>Human-in-the-Loop</span><span>Eval Harness</span><span>LangSmith</span><span>MCP</span>
             </div>
             <a href="retail-agent.html" class="project-card__link">Read the deep dive</a>
-            <a href="https://github.com/Lori10/retail-analyst-agent/tree/feat/qa-eval-harness" class="project-card__link" target="_blank" rel="noopener">View on GitHub</a>
+            <a href="https://github.com/Lori10/retail-analyst-agent" class="project-card__link" target="_blank" rel="noopener">View on GitHub</a>
           </div>
         </article>
 

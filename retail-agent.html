@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Retail Data Analysis Agent — Lorenc Zhuka</title>
-  <meta name="description" content="A LangGraph chat agent that lets non-technical retail managers query BigQuery in natural language — with PII masking, human-in-the-loop deletes, self-correcting error handling, tracing, and an eval harness." />
+  <meta name="description" content="A LangGraph chat agent that lets non-technical retail managers query BigQuery in natural language — with PII masking, human-in-the-loop deletes, self-correcting error handling, tracing, an eval harness, and MCP server and client support." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Philosopher:wght@400;700&display=swap" rel="stylesheet" />
@@ -38,12 +38,14 @@
           An internal chat agent that lets non-technical Store and Regional Managers ask questions about sales,
           customers, and products in plain language, discuss the answers, and turn them into saved reports with
           action items. The agent writes and runs its own SQL against
-          <code>bigquery-public-data.thelook_ecommerce</code>. It runs in production on Google Cloud.
+          <code>bigquery-public-data.thelook_ecommerce</code>. It runs in production on Google Cloud, and it speaks
+          the Model Context Protocol (MCP) in both directions: it publishes its tools to other MCP clients and
+          loads tools from external MCP servers.
         </p>
         <div class="project-card__tags">
-          <span>LangGraph</span><span>Gemini</span><span>BigQuery</span><span>PostgreSQL</span><span>PII Masking</span><span>Human-in-the-Loop</span><span>Eval Harness</span><span>LangSmith</span>
+          <span>LangGraph</span><span>Gemini</span><span>BigQuery</span><span>PostgreSQL</span><span>PII Masking</span><span>Human-in-the-Loop</span><span>Eval Harness</span><span>LangSmith</span><span>MCP</span>
         </div>
-        <a href="https://github.com/Lori10/retail-analyst-agent/tree/feat/qa-eval-harness" class="timeline__link" target="_blank" rel="noopener">View the code on GitHub &rarr;</a>
+        <a href="https://github.com/Lori10/retail-analyst-agent" class="timeline__link" target="_blank" rel="noopener">View the code on GitHub &rarr;</a>
       </header>
 
       <section class="case__section reveal">
@@ -243,7 +245,55 @@ Agent: Deleted 1 report(s).</code></pre>
 
       <section class="case__section reveal">
         <div class="section__head">
-          <span class="section__label">09 · Production Deployment</span>
+          <span class="section__label">09 · MCP: Server &amp; Client</span>
+          <span class="section__rule" aria-hidden="true"></span>
+        </div>
+        <div class="case__body">
+          <p>
+            The agent supports the <strong>Model Context Protocol</strong> in both directions, built on the
+            official <code>mcp</code> Python SDK v2.
+          </p>
+          <p>
+            <strong>MCP server.</strong> The same data and reports tools are published over stdio to any MCP
+            client, such as Claude Code, Claude Desktop, or MCP Inspector. The client brings its own model, so no
+            Gemini key is needed. The client also brings its own prompt and its own idea of when to ask the user
+            anything, so every guarantee is enforced under the tool, on the server side:
+          </p>
+          <ul class="timeline__list">
+            <li><strong>PII:</strong> queries go through the same guarded BigQuery wrapper, so the read-only check, cost cap, row limit, and PII column stripping apply to every client.</li>
+            <li><strong>Owner scoping:</strong> every reports call is limited to the server's owner, the same identity the chat agent uses.</li>
+            <li><strong>Two-step delete:</strong> an MCP client never passes through the graph's <code>interrupt()</code>, so deletion is split in two. <code>preview_delete</code> deletes nothing and returns the exact candidates plus a single-use, owner-bound token that expires after 5 minutes. <code>confirm_delete(token)</code> deletes exactly the previewed reports, once. Nothing can be deleted that wasn't previewed first, and a report added between preview and confirm is never swept up.</li>
+            <li><strong>Errors:</strong> typed agent errors reach the client as readable tool errors, so the client's model can fix its SQL and retry. Unexpected exceptions are logged on the server and never leak internals.</li>
+          </ul>
+          <p>
+            Startup is deliberately thin: BigQuery and Postgres connect lazily on the first tool call. This
+            brought the stdio handshake down to about 2 seconds, well inside Claude Code's 30-second connect
+            timeout, which an earlier version that connected everything up front had missed on a cold start.
+          </p>
+          <p>
+            <strong>MCP client.</strong> Going the other way, the agent loads tools from external MCP servers
+            listed in a config file in the same shape as Claude Code's <code>.mcp.json</code>. The bundled example
+            adds the official time server, which the agent uses to work out what "last month" means. External
+            tools are namespaced per server, bound to Gemini next to the built-in tools, and run through the same
+            loop, so the self-correct budget, error handling, and tracing apply unchanged and the graph needed no
+            new nodes. External servers are a new trust boundary:
+          </p>
+          <ul class="timeline__list">
+            <li>their output is treated as untrusted data, like every other tool result.</li>
+            <li>tools that declare themselves destructive are skipped unless the config explicitly allowlists them.</li>
+            <li>each tool schema is checked on its own at startup, so one bad external schema can't break the built-in tools.</li>
+            <li>an unreachable server is logged and skipped, and the agent starts with everything else.</li>
+          </ul>
+<pre class="case__code"><code>Loaded 1 external tool(s) from 1 of 1 MCP server(s).
+&gt; What was total revenue last month?
+Calling time__get_current_time...
+Running a query...</code></pre>
+        </div>
+      </section>
+
+      <section class="case__section reveal">
+        <div class="section__head">
+          <span class="section__label">10 · Production Deployment</span>
           <span class="section__rule" aria-hidden="true"></span>
         </div>
         <div class="case__body">
