@@ -255,7 +255,7 @@ Agent: Deleted 1 report(s).</code></pre>
           </p>
           <p>
             <strong>MCP server.</strong> The same data and reports tools are published over stdio to any MCP
-            client, such as Claude Code, Claude Desktop, or MCP Inspector. The client brings its own model, so no
+            client. The client brings its own model, so no
             Gemini key is needed. The client also brings its own prompt and its own idea of when to ask the user
             anything, so every guarantee is enforced under the tool, on the server side:
           </p>
@@ -267,12 +267,12 @@ Agent: Deleted 1 report(s).</code></pre>
           </ul>
           <p>
             Startup is deliberately thin: BigQuery and Postgres connect lazily on the first tool call. This
-            brought the stdio handshake down to about 2 seconds, well inside Claude Code's 30-second connect
+            brought the stdio handshake down to about 2 seconds, well inside a typical client connect
             timeout, which an earlier version that connected everything up front had missed on a cold start.
           </p>
           <p>
             <strong>MCP client.</strong> Going the other way, the agent loads tools from external MCP servers
-            listed in a config file in the same shape as Claude Code's <code>.mcp.json</code>. The bundled example
+            listed in a JSON config file. The bundled example
             adds the official time server, which the agent uses to work out what "last month" means. External
             tools are namespaced per server, bound to Gemini next to the built-in tools, and run through the same
             loop, so the self-correct budget, error handling, and tracing apply unchanged and the graph needed no
