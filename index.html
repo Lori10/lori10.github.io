@@ -64,7 +64,8 @@
           delivering semantic search engines, RAG-based private chatbots, and AI agents for enterprise clients.
           Hands-on across the full stack: document ingestion and OCR, chunking, hybrid retrieval and reranking,
           self-hosted LLM serving, agents with tool use and MCP, evaluation, and deployment on Azure, Google
-          Cloud, and AWS. Skilled at turning unstructured data into accurate, cited answers that fit into real
+          Cloud, and AWS. Beyond LLMs, I work on real-time multi-sensor track fusion for a tactical edge
+          defense platform. Skilled at turning unstructured data into accurate, cited answers that fit into real
           business workflows, and at shipping them reliably through tests, evals, and spec-driven, AI-assisted
           development with Claude Code and OpenSpec.
         </p>
@@ -107,6 +108,12 @@
               <h5>ML / DL / NLP</h5>
               <div class="tags">
                 <span class="tag">PyTorch</span><span class="tag">TensorFlow</span><span class="tag">scikit-learn</span><span class="tag">spaCy</span><span class="tag">Fine-tuning (BERT, T5, SetFit)</span>
+              </div>
+            </div>
+            <div class="stack__group">
+              <h5>Sensor Fusion &amp; Tracking</h5>
+              <div class="tags">
+                <span class="tag">Multi-target tracking</span><span class="tag">Kalman filters (linear &amp; unscented)</span><span class="tag">Data association (GNN, Mahalanobis gating)</span><span class="tag">Stone Soup</span><span class="tag">Geospatial frames (WGS84 / ENU)</span><span class="tag">SAPIENT &amp; Cursor-on-Target</span><span class="tag">Performance benchmarking</span>
               </div>
             </div>
             <div class="stack__group">
@@ -248,6 +255,18 @@
         <article class="project-card reveal">
           <span class="project-card__number">02</span>
           <div>
+            <h4 class="project-card__title">Tactical Edge Sensor Fusion Platform <span class="project-card__status">In development</span></h4>
+            <p class="project-card__desc">A defense platform that fuses live data from many sensor sites into one shared picture for command-and-control (C2) users. Radars, acoustic arrays and EO/IR cameras report detections in standard formats (SAPIENT, Cursor-on-Target). These flow through Kafka streaming pipelines on Kubernetes into a multi-sensor track-fusion engine built on Stone Soup, which uses Kalman filtering with an unscented update, Mahalanobis gating and global-nearest-neighbour association. The fused tracks are then sent to TAK map clients and archives. An LLM stage turns them into situation reports: each period it condenses the recent fused picture into a compact digest of threats, places ahead and soonest arrivals, and asks a self-hosted model (vLLM behind an OpenAI-compatible API) for a summary returned as schema-validated JSON. A synthetic scenario generator produces realistic sensor streams with ground truth for testing. My contribution is in the fusion engine. I measured how one fusion instance behaves when it serves geographically distant, unrelated sites at once. For this I built a benchmark harness, with tests written first, that replays scenarios alone and merged and scores each site against ground truth. Four experiments then separated the effects of combining sites, coordinate-frame placement, clock offsets between sites, and load at one site. Accuracy held up to 600 km from the frame origin. However, every live track added about 0.1 ms to every event at every site, so clutter at one site slowed the other site's processing 4.8–6.5×, and a site whose clock lagged more than 2 s lost up to 42% of its events to the shared late-event gate. I am now prototyping geospatial clustering of sensors with one parallel fusion instance per cluster, measured against that baseline.</p>
+            <div class="project-card__tags">
+              <span>Sensor Fusion</span><span>Multi-Target Tracking</span><span>Kalman Filters</span><span>Stone Soup</span><span>Geospatial</span><span>Kafka</span><span>LLM Situation Reports</span><span>vLLM</span><span>Benchmarking</span><span>Python</span>
+            </div>
+            <span class="project-card__link project-card__link--static">Private — Client Project</span>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <span class="project-card__number">03</span>
+          <div>
             <h4 class="project-card__title">Rail Rights Agent — EU Passenger Rights Assistant <span class="project-card__status">In development</span></h4>
             <p class="project-card__desc">A bilingual (German/English) AI agent on AWS that explains rail passenger rights under EU Regulation 2021/782 and Deutsche Bahn's conditions of carriage, checks a trip's delay, works out the compensation owed and files a claim only after the passenger explicitly confirms. Built so far: a Bedrock Knowledge Base over the legal texts in both languages, stored in S3 Vectors with Titan V2 embeddings, where every retrieved passage carries its document, language and page so answers can cite their source; and all infrastructure as AWS CDK code with one-command deploy and teardown, mandatory resource tagging, a region lock and a cost budget with email alerts, designed to cost close to nothing while idle. Next up: compensation calculated in plain code rather than by the model, delay-lookup and claim tools on Lambda and DynamoDB, a Strands agent hosted on Bedrock AgentCore, Guardrails against PII leaks and prompt attacks, and a bilingual evaluation set comparing Claude Haiku and Amazon Nova. Developed spec-first with OpenSpec and Claude Code, with tests written before the code and strict lint, type and secret checks in CI.</p>
             <div class="project-card__tags">
@@ -258,7 +277,7 @@
         </article>
 
         <article id="bit-rag" class="project-card reveal">
-          <span class="project-card__number">03</span>
+          <span class="project-card__number">04</span>
           <div>
             <h4 class="project-card__title">BIT-RAG — Production RAG Framework</h4>
             <p class="project-card__desc">Architected and maintain a production-grade Python RAG framework powering document Q&amp;A across multiple enterprise products, including for one of Germany's largest transport and logistics companies. Built the document ingestion and preprocessing pipeline that turns complex PDFs into retrieval-ready data, combining OCR, layout detection, table extraction, and structural parsing. Developed semantic chunking from scratch with metadata propagation and dedicated handling for text, table, and image elements, plus hybrid dense+sparse retrieval over Milvus and OpenSearch with reranking by cross-encoder models and LLMs. Built the core chatbot orchestration layer on Azure OpenAI and self-hosted open-source LLMs and embedding models, served through APIs built from scratch on vLLM, TGI, and llama.cpp, with GPU memory management, scaling, and monitoring. Own ingestion, deletion, and persistence pipelines across Milvus, OpenSearch, and SQL, plus CI/CD and Docker deployments serving millions of chunks in production.</p>
@@ -270,7 +289,7 @@
         </article>
 
         <article class="project-card reveal">
-          <span class="project-card__number">04</span>
+          <span class="project-card__number">05</span>
           <div>
             <h4 class="project-card__title">Enterprise Document Q&amp;A Platform</h4>
             <p class="project-card__desc">Led architecture and backend development of a production document Q&amp;A platform serving multiple enterprise customers, built on top of the RAG framework above. Delivered the end-to-end pipeline — PDF ingestion plus API-based ingestion of YouTrack issues/articles and Wiki pages, semantic chunking, hybrid dense+sparse retrieval (Milvus + OpenSearch) with LLM reranking — plus a streaming chatbot with citation-grounded answers and source-chunk highlighting. Added multi-tenant access control, multilingual support across 4 languages, and CI/CD-driven Docker deployments that cut the backend image from 18GB to 2.3GB.</p>
@@ -282,7 +301,7 @@
         </article>
 
         <article class="project-card reveal">
-          <span class="project-card__number">05</span>
+          <span class="project-card__number">06</span>
           <div>
             <h4 class="project-card__title">PDF Plan Search &amp; OCR Platform</h4>
             <p class="project-card__desc">Architected and deployed the backend and infrastructure for a specialized search platform for engineering and architectural plans. Built bundle/ZIP upload handling, OCR text extraction (PaddleOCR baked into Docker images), and Elasticsearch indexing with relevance-scored keyword search. Implemented secure authentication with per-user document visibility and an interactive PDF viewer with zoom, pan, and search highlighting, deployed via TeamCity CI/CD with auto-versioned Docker builds.</p>
@@ -294,7 +313,7 @@
         </article>
 
         <article class="project-card reveal">
-          <span class="project-card__number">06</span>
+          <span class="project-card__number">07</span>
           <div>
             <h4 class="project-card__title">Autonomous AI Research Agent with BabyAGI</h4>
             <p class="project-card__desc">Autonomous agent that answers research questions with factual, referenced answers by orchestrating three LLMs: a task-generation LLM breaks the objective into a task list, a task-execution LLM works through each task and stores enriched results in a vector database (Chroma or Weaviate), and a prioritization LLM re-ranks the remaining tasks based on progress so far. Extends the open-source BabyAGI with a final answer-generation LLM and fixes to its task generation. The execution step pulls papers from arXiv, ChemRxiv, and PubMed through their APIs and runs semantic search over them to ground GPT-3.5-turbo. Results come back as structured JSON with the answer and the source paper it relied on.</p>
@@ -306,7 +325,7 @@
         </article>
 
         <article class="project-card reveal">
-          <span class="project-card__number">07</span>
+          <span class="project-card__number">08</span>
           <div>
             <h4 class="project-card__title">Autonomous AI Research Agent with ReAct</h4>
             <p class="project-card__desc">Research agent built on the ReAct pattern, which interleaves chain-of-thought reasoning with tool calls. It breaks a question into sub-questions and keeps questioning and answering itself until it can answer the original question with confidence. For each sub-question, a custom tool retrieves relevant papers from arXiv, ChemRxiv, PubMed, and other sources, then runs semantic search over them so GPT-3.5-turbo answers from the retrieved text rather than from memory. The final JSON output contains the answer and the reference paper it came from, so it plugs straight into downstream tools.</p>
@@ -318,7 +337,7 @@
         </article>
 
         <article class="project-card reveal">
-          <span class="project-card__number">08</span>
+          <span class="project-card__number">09</span>
           <div>
             <h4 class="project-card__title">Text Classification with SETFIT</h4>
             <p class="project-card__desc">Research study on prompt-free few-shot text classification with SETFIT. It fine-tunes a pre-trained Sentence Transformer on sentence pairs in a contrastive Siamese setup, then trains a classification head on the resulting embeddings. Benchmarked on SST-2, SentEval-CR, and ADE-corpus-v2 over 5 random splits against standard BERT fine-tuning. With 18 training samples per class, SETFIT beat fine-tuned BERT by an average of 22.6 accuracy points and trained an order of magnitude faster. I also proposed a hard negative/positive sampling method for building the contrastive pairs, which beat SETFIT's default random sampling by 1.1 points on average at 50 samples. The code, data, and full write-up are public.</p>
@@ -331,7 +350,7 @@
         </article>
 
         <article class="project-card reveal">
-          <span class="project-card__number">09</span>
+          <span class="project-card__number">10</span>
           <div>
             <h4 class="project-card__title">Loan Approval Prediction</h4>
             <p class="project-card__desc">Classifier that predicts whether a loan application will be approved from financial and loan-request features, trained on a highly imbalanced dataset of 100,000+ records. Handled the class imbalance with class weighting, an Easy Ensemble classifier, and up/downsampling. The resampling runs inside scikit-learn pipelines so that only the training folds are resampled during cross-validation, which prevents data leakage. Compared XGBoost, Random Forest, and Easy Ensemble tuned with RandomizedSearchCV on AUC, and selected features with recursive feature elimination. Built with object-oriented code and served through a Flask web app that supports retraining, with logging of each cleaning and training run.</p>
@@ -343,7 +362,7 @@
         </article>
 
         <article class="project-card reveal">
-          <span class="project-card__number">10</span>
+          <span class="project-card__number">11</span>
           <div>
             <h4 class="project-card__title">Real Estate Price Prediction</h4>
             <p class="project-card__desc">Regression model that predicts Bengaluru house prices from 13,000+ very messy Kaggle listings. Most of the work was data cleaning: property sizes came in a mix of units and formats and were standardized to square feet, and high-cardinality locations were grouped into their top categories before one-hot encoding. Outliers were removed with business rules from a real-estate domain expert, such as a 300 sqft-per-bedroom minimum and price-per-sqft bands for each location. Compared Linear Regression, Random Forest, and KNN inside leak-free pipelines covering feature selection, scaling, and RandomizedSearchCV tuning. Random Forest scored best with a test R² of 0.88. Served through a Flask web app with retraining and training-history logging.</p>
@@ -355,7 +374,7 @@
         </article>
 
         <article class="project-card reveal">
-          <span class="project-card__number">11</span>
+          <span class="project-card__number">12</span>
           <div>
             <h4 class="project-card__title">Traffic Sign Recognition with CNN</h4>
             <p class="project-card__desc">Computer-vision classifier for 43 types of traffic signs, the kind of recognition used in self-driving and driver-assistance systems. Preprocessing converted images to grayscale, normalized them, and shuffled them. Starting from a LeNet-style CNN, I tried several ways to reduce overfitting and improve generalization: early stopping, hyperparameter search with KerasTuner RandomSearch, data augmentation, and transfer learning from VGG16. Each model was compared on training, validation, and test accuracy and loss. The tuned LeNet gave the best balance, with about 94% test accuracy and a much lower test loss than the baseline. Served through a Flask web app.</p>
@@ -367,7 +386,7 @@
         </article>
 
         <article class="project-card reveal">
-          <span class="project-card__number">12</span>
+          <span class="project-card__number">13</span>
           <div>
             <h4 class="project-card__title">Grammar Checker and Corrector</h4>
             <p class="project-card__desc">Two-stage grammar tool. The first stage is a bigram language model written from scratch: it counts n-grams, adds sentence start and end markers, applies add-k smoothing, and scores how probable each sentence is, flagging it as incorrect if the score falls below a threshold. The k-smoothing value and the threshold were tuned together to maximize F1 on incorrect sentences, raising AUC from 0.67 to 0.83 and recall to 1.0. The second stage uses a fine-tuned T5 Transformer to classify sentences and rewrite the incorrect ones. Served through a Flask web app.</p>
@@ -379,7 +398,7 @@
         </article>
 
         <article class="project-card reveal">
-          <span class="project-card__number">13</span>
+          <span class="project-card__number">14</span>
           <div>
             <h4 class="project-card__title">Question Answering System with BERT</h4>
             <p class="project-card__desc">Extractive question-answering system that fine-tunes a pre-trained BERT Transformer to read a question together with a context passage and return the answer span from the text. It works on single paragraphs or across a larger knowledge base, so users can ask questions in natural language and get answers taken directly from their own documents without writing answers by hand.</p>
